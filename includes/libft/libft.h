@@ -100,4 +100,5 @@ size_t			ft_putnstr_fd(char *s, int len, int fd);
 int				ft_putpointer_fd(void *p, int fd);
 int				ft_putnbrbase_fd(long number, int base, int fd, int capital);
 void			free_list(t_node *list);
+int				ft_strarr_len(char **arr);
 #endif

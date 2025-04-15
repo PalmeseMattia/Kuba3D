@@ -29,8 +29,8 @@ typedef struct s_settings
 
 typedef struct	s_point
 {
-	int		x;
-	int		y;
+	double	x;
+	double	y;
 	char	c;
 }	t_point;
 

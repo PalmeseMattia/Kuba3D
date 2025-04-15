@@ -15,10 +15,16 @@ static void ft_hook(void* param)
 	printf("WIDTH: %d | HEIGHT: %d\n", mlx->width, mlx->height);
 }
 
+void	initialize_game(t_cube *cube)
+{
+	cube->settings = load_mock_data();
+}
+
 int	main(void)
 {
+	t_cube	cube;
 
-	// MLX allows you to define its core behaviour before startup.
+	initialize_game(&cube);
 	mlx_set_setting(MLX_MAXIMIZED, false);
 	mlx_t* mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D", false);
 	if (!mlx)
@@ -30,12 +36,15 @@ int	main(void)
 		ft_error();
 
 	// Even after the image is being displayed, we can still modify the buffer.
-	mlx_put_pixel(img, 0, 0, 0xFF0000FF);
+	mlx_put_pixel(img, 0, 0, 0x00FF00FF);
 
 	// Register a hook and pass mlx as an optional param.
 	// NOTE: Do this before calling mlx_loop!
 	mlx_loop_hook(mlx, ft_hook, mlx);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
+
+	if (cube.settings)
+		free(cube.settings);
 	return (EXIT_SUCCESS);
 }

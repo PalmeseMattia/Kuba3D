@@ -8,6 +8,7 @@
 		"fcntl.h": "c",
 		"cube_mock.h": "c",
 		"stdio.h": "c",
-		"parsing.h": "c"
+		"parsing.h": "c",
+		"stdlib.h": "c"
 	}
 }

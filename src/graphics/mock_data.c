@@ -6,7 +6,7 @@
 /*   By: jnenczak <jnenczak@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:15:33 by jnenczak          #+#    #+#             */
-/*   Updated: 2025/04/15 19:01:11 by jnenczak         ###   ########.fr       */
+/*   Updated: 2025/04/15 21:42:20 by jnenczak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,43 @@ t_settings	*load_mock_data( void )
 	ret->textures[2].path = "assets/textures/birch_planks.png";
 	ret->textures[3].path = "assets/textures/birch_planks.png";
 	return (ret);
+}
+
+t_map	*load_mock_map( void )
+{
+	t_map	*map;
+	int		y, x;
+
+	map = malloc(sizeof(t_map));
+	if (!map)
+		return (NULL);
+	y = -1;
+	while (++y < MAP_SIZE)
+	{
+		x = -1;
+		while (++x < MAP_SIZE)
+		{
+			map->tiles[y][x].y = y;
+			map->tiles[y][x].x = x;
+			if (y == 0 || x == 0 || x == MAP_SIZE - 1 || y == MAP_SIZE - 1)
+				map->tiles[y][x].c = '1';
+			else
+				map->tiles[y][x].c = '0';
+		}
+	}
+	map->tiles[PLAYER_START_Y][PLAYER_START_X].c = 'E';
+	return (map);
+}
+
+t_player	*load_mock_player( void )
+{
+	t_player	*ret;
+
+	ret = malloc(sizeof(t_player));
+	if (!ret)
+		return (NULL);
+	ret->location.x = PLAYER_START_X;
+	ret->location.y = PLAYER_START_Y;
+	ret->angle = 0.0;
+	return(ret);
 }

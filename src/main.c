@@ -1,11 +1,4 @@
-// Written by Bruh
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-#include "MLX42/MLX42.h"
-#define WIDTH 256
-#define HEIGHT 256
+#include <cube.h>
 
 // Exit the program as failure.
 static void ft_error(void)
@@ -22,19 +15,17 @@ static void ft_hook(void* param)
 	printf("WIDTH: %d | HEIGHT: %d\n", mlx->width, mlx->height);
 }
 
-int32_t	main(void)
+int	main(void)
 {
 
 	// MLX allows you to define its core behaviour before startup.
-	mlx_set_setting(MLX_MAXIMIZED, true);
-	mlx_t* mlx = mlx_init(WIDTH, HEIGHT, "42Balls", true);
+	mlx_set_setting(MLX_MAXIMIZED, false);
+	mlx_t* mlx = mlx_init(WINDOW_WIDTH, WINDOW_HEIGHT, "Cub3D", false);
 	if (!mlx)
 		ft_error();
 
-	/* Do stuff */
-
 	// Create and display the image.
-	mlx_image_t* img = mlx_new_image(mlx, 256, 256);
+	mlx_image_t* img = mlx_new_image(mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	if (!img || (mlx_image_to_window(mlx, img, 0, 0) < 0))
 		ft_error();
 

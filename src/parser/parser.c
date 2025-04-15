@@ -1,7 +1,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../includes/libft/libft.h"
+#include <libft.h>
 
 enum e_cardinal {
 	NORTH,
@@ -86,9 +86,4 @@ void parse_settings(char *file_path)
 			printf("Found Ceiling color\n");
 		}
 	}
-}
-
-int main()
-{
-	parse_settings("test.cub");
 }

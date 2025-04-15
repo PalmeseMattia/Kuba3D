@@ -4,6 +4,7 @@
 		"*.development": "properties",
 		"*.sql": "sql",
 		"*.production": "properties",
-		"mlx42.h": "c"
+		"mlx42.h": "c",
+		"fcntl.h": "c"
 	}
 }

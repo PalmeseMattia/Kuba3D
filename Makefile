@@ -1,19 +1,22 @@
 NAME	:= Cube
 CFLAGS	:= -Wextra -Wall -Werror
 LIBMLX	:= ./lib/mlx
+LIBLIBFT := ./lib/libft
 
 # Apple Silicon
 APPLE_SILICON_FLAGS = -framework Cocoa -framework OpenGL -framework IOKit
 GLFW_LIB = -L"/opt/homebrew/Cellar/glfw/3.4/lib/"
 # / Apple Silicon
 
-HEADERS	:= -I ./includes/libft -I $(LIBMLX)/include
-LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm $(GLFW_LIB)
-# SRCS	:= $(shell find ./src -iname "*.c")
-SRCS	:= src/main.c
+HEADERS	:=  -I ./includes/ -I $(LIBLIBFT) -I $(LIBMLX)/include
+LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm $(GLFW_LIB) $(LIBLIBFT)/libft.a
+SRCS	:= $(shell find ./src -iname "*.c")
 OBJS	:= ${SRCS:.c=.o}
 
-all: libmlx $(NAME)
+all: liblibft libmlx $(NAME)
+
+liblibft:
+	@cd $(LIBLIBFT) && make 
 
 libmlx:
 	@cmake $(LIBMLX) -B $(LIBMLX)/build && make -C $(LIBMLX)/build -j4
@@ -27,9 +30,11 @@ $(NAME): $(OBJS)
 clean:
 	@rm -rf $(OBJS)
 	@rm -rf $(LIBMLX)/build
+	@cd $(LIBLIBFT) && make clean
 
 fclean: clean
 	@rm -rf $(NAME)
+	@rm $(LIBLIBFT)/libft.a
 
 re: clean all
 

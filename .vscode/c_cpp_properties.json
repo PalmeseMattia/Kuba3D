@@ -1,6 +1,6 @@
 {
 	"env": {
-	  "myIncludePath": ["${workspaceFolder}/includes", "${workspaceFolder}/lib/libft", "${workspaceFolder}/lib/mlx/include", "${workspaceFolder}/includes/cube/mock", "${workspaceFolder}/includes/cube/parsing"],
+	  "myIncludePath": ["${workspaceFolder}/includes", "${workspaceFolder}/lib/libft", "${workspaceFolder}/lib/mlx/include", "${workspaceFolder}/includes/cube/mock", "${workspaceFolder}/includes/cube/parsing", "${workspaceFolder}/includes/cube/utils"],
 	  "myDefines": ["DEBUG=1"]
 	},
 	"configurations": [

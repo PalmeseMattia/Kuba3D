@@ -8,7 +8,7 @@ APPLE_SILICON_FLAGS = -framework Cocoa -framework OpenGL -framework IOKit
 GLFW_LIB = -L"/opt/homebrew/Cellar/glfw/3.4/lib/"
 # / Apple Silicon
 
-HEADERS	:=  -I ./includes/ -I $(LIBLIBFT) -I $(LIBMLX)/include -I ./includes/cube/mock/ -I ./includes/cube/parsing/
+HEADERS	:=  -I ./includes/ -I $(LIBLIBFT) -I $(LIBMLX)/include -I ./includes/cube/mock/ -I ./includes/cube/parsing/ -I ./includes/cube/utils/
 LIBS	:= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm $(GLFW_LIB) $(LIBLIBFT)/libft.a
 SRCS	:= $(shell find ./src -iname "*.c")
 OBJS	:= ${SRCS:.c=.o}

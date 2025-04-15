@@ -27,4 +27,16 @@ typedef struct s_settings
 	t_color		ceiling;
 }	t_settings;
 
+typedef struct	s_point
+{
+	int		x;
+	int		y;
+	char	c;
+}	t_point;
+
+typedef struct	s_map
+{
+	t_point	tiles[128][128];
+}	t_map;
+
 #endif

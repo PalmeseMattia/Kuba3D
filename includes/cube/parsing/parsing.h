@@ -34,6 +34,12 @@ typedef struct	s_point
 	char	c;
 }	t_point;
 
+typedef struct	s_player
+{
+	t_point	location;
+	double	angle;
+}	t_player;
+
 typedef struct	s_map
 {
 	t_point	tiles[128][128];

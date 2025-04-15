@@ -14,6 +14,7 @@ typedef struct	s_cube
 {
 	t_settings	*settings;
 	t_map		*map;
+	t_player	*player;
 }	t_cube;
 
 #endif

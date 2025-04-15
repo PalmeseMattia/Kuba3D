@@ -12,7 +12,7 @@ void	print_map(t_map map)
 	{
 		x = -1;
 		while (++x < MAP_SIZE)
-		printf("%d", map.tiles[y][x].c);
+			printf("%c", map.tiles[y][x].c);
 		printf("\n");
 	}
 	printf("--- / PRINTING MAP ---\n");

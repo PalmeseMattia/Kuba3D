@@ -20,6 +20,7 @@ void	initialize_game(t_cube *cube)
 {
 	cube->settings = load_mock_data();
 	cube->map = load_mock_map();
+	cube->player = load_mock_player();
 }
 
 void	free_game(t_cube *cube)
@@ -28,6 +29,8 @@ void	free_game(t_cube *cube)
 		free(cube->settings);
 	if (cube->map)
 		free(cube->map);
+	if (cube->player)
+		free(cube->player);
 }
 
 int	main(void)

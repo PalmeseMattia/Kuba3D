@@ -6,7 +6,7 @@
 /*   By: jnenczak <jnenczak@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:15:33 by jnenczak          #+#    #+#             */
-/*   Updated: 2025/04/16 00:20:24 by jnenczak         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:55:59 by jnenczak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ t_player	*load_mock_player( void )
 		return (NULL);
 	ret->location.x = PLAYER_START_X;
 	ret->location.y = PLAYER_START_Y;
-	ret->angle = 45.0;
+	ret->angle = PLAYER_VIEWING_ANGLE; // slightly rotated from straight left
 	return(ret);
 }
 

@@ -7,9 +7,9 @@
 # include "MLX42/MLX42.h"
 # include <cube_mock.h>
 
-# define WINDOW_WIDTH 960
-# define WINDOW_HEIGHT 540
-# define FOV 90
+# define WINDOW_WIDTH 640
+# define WINDOW_HEIGHT 480
+# define FOV .66
 # define TILE_SIZE 1
 
 typedef struct	s_cube

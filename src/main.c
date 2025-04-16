@@ -26,7 +26,6 @@ void initialize_game(t_cube *cube)
 
 	cube->time = 0;
 	cube->old_time = 0;
-  
 }
 
 void free_game(t_cube *cube)
@@ -39,16 +38,83 @@ void free_game(t_cube *cube)
 		free(cube->player);
 }
 
-static void	game_loop_hook(void *param)
+static void game_loop_hook(void *param)
 {
-	t_cube *cube;
-	
+	t_cube			*cube;
+	t_scene_setup	scene;
+
 	cube = (t_cube *)param;
-	draw_scene(cube);
+	scene = draw_scene(cube);
 
 	// TODO: React to input
-}
+	cube->old_time = cube->time;
+	cube->time = framerate_get_ticks();
+	double frameTime = (cube->time - cube->old_time) / 1000.0; // frameTime is the time this frame has taken, in seconds
+	printf("FPS: %f\n", 1.0 / frameTime);
 
+	// Speed Modifiers
+	double moveSpeed = frameTime * 5.0; // the constant value is in squares/second
+	double rotSpeed = frameTime * 3.0;	// the constant value is in radians/second
+
+	t_point	pos;
+	t_vect	dir;
+
+	pos = cube->player->location;
+	dir = scene.dir_vect;
+
+	// Log the player's current position
+	printf("Player Position: x = %f, y = %f\n", pos.x, pos.y);
+
+	// Move forward if no wall in front of you
+	if (mlx_is_key_down(cube->mlx, MLX_KEY_UP))
+	{
+		printf("Key Pressed: UP\n");
+		if (cube->map->tiles[(int)(pos.x + dir.dir_x * moveSpeed)][(int)pos.y].c == '0')
+			pos.x += dir.dir_x * moveSpeed;
+		if (cube->map->tiles[(int)pos.x][(int)(pos.y + dir.dir_y * moveSpeed)].c == '0')
+			pos.y += dir.dir_y * moveSpeed;
+	}
+
+	// Move backwards if no wall behind you
+	if (mlx_is_key_down(cube->mlx, MLX_KEY_DOWN))
+	{
+		printf("Key Pressed: DOWN\n");
+		if (cube->map->tiles[(int)(pos.x - dir.dir_x * moveSpeed)][(int)pos.y].c == '0')
+			pos.x -= dir.dir_x * moveSpeed;
+		if (cube->map->tiles[(int)pos.x][(int)(pos.y - dir.dir_y * moveSpeed)].c == '0')
+			pos.y -= dir.dir_y * moveSpeed;
+	}
+	
+	// Rotate to the right
+	if (mlx_is_key_down(cube->mlx, MLX_KEY_RIGHT))
+	{
+		printf("Key Pressed: RIGHT\n");
+		double old_dir_x = dir.dir_x;
+		dir.dir_x = dir.dir_x * cos(-rotSpeed) - dir.dir_y * sin(-rotSpeed);
+		dir.dir_y = old_dir_x * sin(-rotSpeed) + dir.dir_y * cos(-rotSpeed);
+
+		double old_plane_x = scene.camera_plane_x;
+		scene.camera_plane_x = scene.camera_plane_x * cos(-rotSpeed) - scene.camera_plane_y * sin(-rotSpeed);
+		scene.camera_plane_y = old_plane_x * sin(-rotSpeed) + scene.camera_plane_y * cos(-rotSpeed);
+	}
+	
+	// Rotate to the left
+	if (mlx_is_key_down(cube->mlx, MLX_KEY_LEFT))
+	{
+		printf("Key Pressed: LEFT\n");
+		double old_dir_x = dir.dir_x;
+		dir.dir_x = dir.dir_x * cos(rotSpeed) - dir.dir_y * sin(rotSpeed);
+		dir.dir_y = old_dir_x * sin(rotSpeed) + dir.dir_y * cos(rotSpeed);
+
+		double old_plane_x = scene.camera_plane_x;
+		scene.camera_plane_x = scene.camera_plane_x * cos(rotSpeed) - scene.camera_plane_y * sin(rotSpeed);
+		scene.camera_plane_y = old_plane_x * sin(rotSpeed) + scene.camera_plane_y * cos(rotSpeed);
+	}
+
+	// printf("Player moved to location: x = %f, y = %f\n", pos.x, pos.y);
+	cube->player->location.x = pos.x;
+	cube->player->location.y = pos.y;
+}
 
 int main(void)
 {
@@ -68,6 +134,7 @@ int main(void)
 		ft_error();
 
 	cube.img = img;
+	cube.mlx = mlx;
 	// Register a hook and pass mlx as an optional param.
 	// NOTE: Do this before calling mlx_loop!
 	mlx_loop_hook(mlx, game_loop_hook, &cube);

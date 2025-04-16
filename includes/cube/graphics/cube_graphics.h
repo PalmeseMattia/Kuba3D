@@ -66,12 +66,12 @@ typedef struct	s_image_data {
 	int		endian;
 }	t_image_data;
 
-void	dda_set_wall_height(t_dda *dda);
-void	dda_init(t_dda *dda, t_scene_setup *scene_setup, double camera_x);
-void	dda_perform(t_dda *dda, t_cube *cube);
-void	dda_set_step_and_initial_side_dist(t_dda *dda);
-void	draw_scene(t_cube *cube);
-void	draw_clear_screen(mlx_image_t *img);
-double	framerate_get_ticks();
+void			dda_set_wall_height(t_dda *dda);
+void			dda_init(t_dda *dda, t_scene_setup *scene_setup, double camera_x);
+void			dda_perform(t_dda *dda, t_cube *cube);
+void			dda_set_step_and_initial_side_dist(t_dda *dda);
+t_scene_setup	draw_scene(t_cube *cube);
+void			draw_clear_screen(mlx_image_t *img);
+double			framerate_get_ticks();
 
 #endif

@@ -18,6 +18,7 @@ typedef struct	s_cube
 	t_map		*map;
 	t_player	*player;
 	mlx_image_t	*img;
+	mlx_t		*mlx;
 
 	size_t		time;
 	size_t		old_time;

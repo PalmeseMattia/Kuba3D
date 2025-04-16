@@ -23,6 +23,10 @@ void initialize_game(t_cube *cube)
 	cube->settings = load_mock_data();
 	cube->map = load_mock_map();
 	cube->player = load_mock_player();
+
+	cube->time = 0;
+	cube->old_time = 0;
+  
 }
 
 void free_game(t_cube *cube)
@@ -33,6 +37,16 @@ void free_game(t_cube *cube)
 		free(cube->map);
 	if (cube->player)
 		free(cube->player);
+}
+
+static void	game_loop_hook(void *param)
+{
+	t_cube *cube;
+	
+	cube = (t_cube *)param;
+	draw_scene(cube);
+
+	// TODO: React to input
 }
 
 
@@ -53,10 +67,10 @@ int main(void)
 	if (!img || (mlx_image_to_window(mlx, img, 0, 0) < 0))
 		ft_error();
 
+	cube.img = img;
 	// Register a hook and pass mlx as an optional param.
 	// NOTE: Do this before calling mlx_loop!
-	// mlx_loop_hook(mlx, ft_hook, mlx);
-	draw_scene(&cube, img);
+	mlx_loop_hook(mlx, game_loop_hook, &cube);
 	mlx_loop(mlx);
 	mlx_terminate(mlx);
 

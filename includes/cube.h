@@ -17,6 +17,10 @@ typedef struct	s_cube
 	t_settings	*settings;
 	t_map		*map;
 	t_player	*player;
+	mlx_image_t	*img;
+
+	size_t		time;
+	size_t		old_time;
 }	t_cube;
 
 #endif

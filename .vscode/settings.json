@@ -9,6 +9,7 @@
 		"cube_mock.h": "c",
 		"stdio.h": "c",
 		"parsing.h": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"cube_graphics.h": "c"
 	}
 }

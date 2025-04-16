@@ -6,7 +6,7 @@
 /*   By: jnenczak <jnenczak@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:15:33 by jnenczak          #+#    #+#             */
-/*   Updated: 2025/04/15 21:42:20 by jnenczak         ###   ########.fr       */
+/*   Updated: 2025/04/16 14:25:26 by jnenczak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,16 @@ t_player	*load_mock_player( void )
 		return (NULL);
 	ret->location.x = PLAYER_START_X;
 	ret->location.y = PLAYER_START_Y;
-	ret->angle = 0.0;
+	ret->angle = PLAYER_VIEWING_ANGLE; // slightly rotated from straight left
+
+	// TODO: Remove artificial offset once controls work
+	ret->angle -= 0.2;
 	return(ret);
+}
+
+// TODO: Implement a real check to see for maps that are not squares
+int	is_within_map_bounds(t_point pt, t_map map)
+{
+	(void)map;
+	return ((pt.x >= 0 && pt.x < MAP_SIZE) && (pt.y >= 0 && pt.x < MAP_SIZE));
 }

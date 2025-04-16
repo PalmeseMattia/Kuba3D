@@ -54,7 +54,7 @@ static void game_loop_hook(void *param)
 
 	// Speed Modifiers
 	double moveSpeed = frameTime * 5.0; // the constant value is in squares/second
-	double rotSpeed = frameTime * 3.0;	// the constant value is in radians/second
+	// double rotSpeed = frameTime * 3.0;	// the constant value is in radians/second
 
 	t_point	pos;
 	t_vect	dir;
@@ -87,29 +87,11 @@ static void game_loop_hook(void *param)
 	
 	// Rotate to the right
 	if (mlx_is_key_down(cube->mlx, MLX_KEY_RIGHT))
-	{
-		printf("Key Pressed: RIGHT\n");
-		double old_dir_x = dir.dir_x;
-		dir.dir_x = dir.dir_x * cos(-rotSpeed) - dir.dir_y * sin(-rotSpeed);
-		dir.dir_y = old_dir_x * sin(-rotSpeed) + dir.dir_y * cos(-rotSpeed);
-
-		double old_plane_x = scene.camera_plane_x;
-		scene.camera_plane_x = scene.camera_plane_x * cos(-rotSpeed) - scene.camera_plane_y * sin(-rotSpeed);
-		scene.camera_plane_y = old_plane_x * sin(-rotSpeed) + scene.camera_plane_y * cos(-rotSpeed);
-	}
+		cube->player->angle += .10;
 	
 	// Rotate to the left
 	if (mlx_is_key_down(cube->mlx, MLX_KEY_LEFT))
-	{
-		printf("Key Pressed: LEFT\n");
-		double old_dir_x = dir.dir_x;
-		dir.dir_x = dir.dir_x * cos(rotSpeed) - dir.dir_y * sin(rotSpeed);
-		dir.dir_y = old_dir_x * sin(rotSpeed) + dir.dir_y * cos(rotSpeed);
-
-		double old_plane_x = scene.camera_plane_x;
-		scene.camera_plane_x = scene.camera_plane_x * cos(rotSpeed) - scene.camera_plane_y * sin(rotSpeed);
-		scene.camera_plane_y = old_plane_x * sin(rotSpeed) + scene.camera_plane_y * cos(rotSpeed);
-	}
+		cube->player->angle -= .10;
 
 	// printf("Player moved to location: x = %f, y = %f\n", pos.x, pos.y);
 	cube->player->location.x = pos.x;

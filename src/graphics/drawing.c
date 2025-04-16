@@ -44,10 +44,10 @@ void	calculate_and_draw_single_stripe(int x, t_scene_setup *scene_setup, t_cube 
 void	draw_clear_screen(mlx_image_t *img)
 {
 	ft_memset(img->pixels, 255, img->width * img->height * sizeof(int32_t));
-	printf("Screen cleared ❌\n");
+	// printf("Screen cleared ❌\n");
 }
 
-void	draw_scene(t_cube *cube)
+t_scene_setup	draw_scene(t_cube *cube)
 {
 	t_scene_setup	scene_setup;
 	int				x;
@@ -67,5 +67,6 @@ void	draw_scene(t_cube *cube)
 	x = -1;
 	while (++x < WINDOW_WIDTH)
 		calculate_and_draw_single_stripe(x, &scene_setup, cube, img);
-	printf("Scene drawn ✅\n");
+	// printf("Scene drawn ✅\n");
+	return (scene_setup);
 }

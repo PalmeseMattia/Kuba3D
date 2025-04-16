@@ -10,9 +10,7 @@ void	dda_set_wall_height(t_dda *dda)
 		perp_wall_dist = (dda->side_dist_x - dda->delta_dist_x);
 	else
 		perp_wall_dist = (dda->side_dist_y - dda->delta_dist_y);
-
-	int wall_height = (int)(WINDOW_HEIGHT / perp_wall_dist);
-	dda->wall_height = wall_height;
+	dda->wall_height = (int)(WINDOW_HEIGHT / perp_wall_dist);
 }
 
 void	dda_init(t_dda *dda, t_scene_setup *scene_setup, double camera_x)

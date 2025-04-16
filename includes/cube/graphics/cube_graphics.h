@@ -48,14 +48,15 @@ typedef struct s_dda
 	double	delta_dist_x;
 	double	delta_dist_y;
 
-	int pos_x;
-	int pos_y;
+	double pos_x;
+	double pos_y;
 
 	int map_x;
 	int map_y;
 
 	// Drawing
 	double	wall_height;
+	double	perp_wall_dist;
 }	t_dda;
 
 typedef struct	s_image_data {

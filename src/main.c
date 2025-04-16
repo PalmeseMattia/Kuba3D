@@ -69,31 +69,40 @@ static void game_loop_hook(void *param)
 	if (mlx_is_key_down(cube->mlx, MLX_KEY_UP))
 	{
 		printf("Key Pressed: UP\n");
-		if (cube->map->tiles[(int)(pos.x + dir.dir_x * moveSpeed)][(int)pos.y].c == '0')
-			pos.x += dir.dir_x * moveSpeed;
-		if (cube->map->tiles[(int)pos.x][(int)(pos.y + dir.dir_y * moveSpeed)].c == '0')
-			pos.y += dir.dir_y * moveSpeed;
+		double new_x = pos.x + dir.dir_x * moveSpeed;
+		double new_y = pos.y + dir.dir_y * moveSpeed;
+
+		// Check if the new position is valid (not in a wall)
+		if (cube->map->tiles[(int)new_y][(int)new_x].c == '0') {
+			pos.x = new_x;
+			pos.y = new_y;
+		}
 	}
 
 	// Move backwards if no wall behind you
 	if (mlx_is_key_down(cube->mlx, MLX_KEY_DOWN))
 	{
 		printf("Key Pressed: DOWN\n");
-		if (cube->map->tiles[(int)(pos.x - dir.dir_x * moveSpeed)][(int)pos.y].c == '0')
-			pos.x -= dir.dir_x * moveSpeed;
-		if (cube->map->tiles[(int)pos.x][(int)(pos.y - dir.dir_y * moveSpeed)].c == '0')
-			pos.y -= dir.dir_y * moveSpeed;
+		double new_x = pos.x - dir.dir_x * moveSpeed;
+		double new_y = pos.y - dir.dir_y * moveSpeed;
+
+		// Check if the new position is valid (not in a wall)
+		if (cube->map->tiles[(int)new_y][(int)new_x].c == '0') {
+			pos.x = new_x;
+			pos.y = new_y;
+		}
 	}
 	
 	// Rotate to the right
 	if (mlx_is_key_down(cube->mlx, MLX_KEY_RIGHT))
-		cube->player->angle += .10;
+		cube->player->angle += frameTime * 3.0;
 	
 	// Rotate to the left
 	if (mlx_is_key_down(cube->mlx, MLX_KEY_LEFT))
-		cube->player->angle -= .10;
+		cube->player->angle -= frameTime * 3.0;
 
-	// printf("Player moved to location: x = %f, y = %f\n", pos.x, pos.y);
+	printf("Direction vector: dir_x = %f, dir_y = %f\n", dir.dir_x, dir.dir_y);
+	printf("New position after movement: x = %f, y = %f\n", pos.x, pos.y);
 	cube->player->location.x = pos.x;
 	cube->player->location.y = pos.y;
 }

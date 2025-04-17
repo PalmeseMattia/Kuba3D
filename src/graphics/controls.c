@@ -2,6 +2,13 @@
 #include <cube.h>
 #include <math.h>
 
+void	quit_game(t_cube *cube)
+{
+	cube->running = 0;
+	// mlx_terminate(cube->mlx);
+	// free_game(cube);
+}
+
 static void	handle_left_right(t_cube *cube, double move_speed)
 {
 	double	new_x;
@@ -90,4 +97,6 @@ void	mov_handle_keypress(t_cube *cube, t_scene_setup scene)
 		handle_left_right(cube, m_speed);
 	if (mlx_is_key_down(cube->mlx, MLX_KEY_RIGHT) || mlx_is_key_down(cube->mlx, MLX_KEY_LEFT))
 		handle_rotation(cube, r_speed);
+	if (mlx_is_key_down(cube->mlx, MLX_KEY_ESCAPE))
+		quit_game(cube);
 }

@@ -11,6 +11,14 @@
 # define WINDOW_HEIGHT 480
 # define FOV .66
 # define TILE_SIZE 1
+# define WINDOW_TITLE "Cub3D"
+# define WINDOW_RESIZE FALSE
+
+typedef enum s_bool
+{
+	FALSE,
+	TRUE
+}	t_bool;
 
 typedef struct	s_cube
 {
@@ -22,6 +30,7 @@ typedef struct	s_cube
 
 	size_t		time;
 	size_t		old_time;
+	t_bool		running;
 }	t_cube;
 
 #endif

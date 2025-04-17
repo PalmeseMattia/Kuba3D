@@ -10,6 +10,7 @@
 		"stdio.h": "c",
 		"parsing.h": "c",
 		"stdlib.h": "c",
-		"cube_graphics.h": "c"
+		"cube_graphics.h": "c",
+		"cube.h": "c"
 	}
 }

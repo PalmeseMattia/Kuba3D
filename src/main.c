@@ -45,66 +45,7 @@ static void game_loop_hook(void *param)
 
 	cube = (t_cube *)param;
 	scene = draw_scene(cube);
-
-	// TODO: React to input
-	cube->old_time = cube->time;
-	cube->time = framerate_get_ticks();
-	double frameTime = (cube->time - cube->old_time) / 1000.0; // frameTime is the time this frame has taken, in seconds
-	printf("FPS: %f\n", 1.0 / frameTime);
-
-	// Speed Modifiers
-	double moveSpeed = frameTime * 5.0; // the constant value is in squares/second
-	// double rotSpeed = frameTime * 3.0;	// the constant value is in radians/second
-
-	t_point	pos;
-	t_vect	dir;
-
-	pos = cube->player->location;
-	dir = scene.dir_vect;
-
-	// Log the player's current position
-	printf("Player Position: x = %f, y = %f\n", pos.x, pos.y);
-
-	// Move forward if no wall in front of you
-	if (mlx_is_key_down(cube->mlx, MLX_KEY_UP))
-	{
-		printf("Key Pressed: UP\n");
-		double new_x = pos.x + dir.dir_x * moveSpeed;
-		double new_y = pos.y + dir.dir_y * moveSpeed;
-
-		// Check if the new position is valid (not in a wall)
-		if (cube->map->tiles[(int)new_y][(int)new_x].c == '0') {
-			pos.x = new_x;
-			pos.y = new_y;
-		}
-	}
-
-	// Move backwards if no wall behind you
-	if (mlx_is_key_down(cube->mlx, MLX_KEY_DOWN))
-	{
-		printf("Key Pressed: DOWN\n");
-		double new_x = pos.x - dir.dir_x * moveSpeed;
-		double new_y = pos.y - dir.dir_y * moveSpeed;
-
-		// Check if the new position is valid (not in a wall)
-		if (cube->map->tiles[(int)new_y][(int)new_x].c == '0') {
-			pos.x = new_x;
-			pos.y = new_y;
-		}
-	}
-	
-	// Rotate to the right
-	if (mlx_is_key_down(cube->mlx, MLX_KEY_RIGHT))
-		cube->player->angle += frameTime * 3.0;
-	
-	// Rotate to the left
-	if (mlx_is_key_down(cube->mlx, MLX_KEY_LEFT))
-		cube->player->angle -= frameTime * 3.0;
-
-	printf("Direction vector: dir_x = %f, dir_y = %f\n", dir.dir_x, dir.dir_y);
-	printf("New position after movement: x = %f, y = %f\n", pos.x, pos.y);
-	cube->player->location.x = pos.x;
-	cube->player->location.y = pos.y;
+	mov_handle_keypress(cube, scene);	
 }
 
 int main(void)

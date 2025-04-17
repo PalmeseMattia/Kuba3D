@@ -74,5 +74,6 @@ void			dda_set_step_and_initial_side_dist(t_dda *dda);
 t_scene_setup	draw_scene(t_cube *cube);
 void			draw_clear_screen(mlx_image_t *img);
 double			framerate_get_ticks();
+void			mov_handle_keypress(t_cube *cube, t_scene_setup scene);
 
 #endif

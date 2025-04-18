@@ -26,7 +26,7 @@ typedef struct	s_scene_setup
 	double	player_pos_x;
 	double	player_pos_y;
 
-	double	camera_plane_x;
+	double	camera_plane_x;	
 	double	camera_plane_y;
 }	t_scene_setup;
 
@@ -67,5 +67,7 @@ t_scene_setup	draw_scene(t_cube *cube);
 void			draw_clear_screen(void *img);
 double			framerate_get_ticks();
 void			mov_handle_keypress(t_cube *cube, t_scene_setup scene, int key_code);
+int				game_loop_hook(t_cube *cube);
+void			initialize_game(t_cube *cube);
 
 #endif

@@ -101,3 +101,13 @@ void	mov_handle_keypress(t_cube *cube, t_scene_setup scene, int key_code)
 	if (key_code == KEY_ESC)
 		quit_game(cube);
 }
+
+int	con_key_hook(int key_code, t_cube *cube)
+{
+	t_scene_setup	scene;
+
+	printf("Hi dead\n");
+	scene = draw_scene(cube);
+	mov_handle_keypress(cube, scene, key_code);
+	return (0);
+}

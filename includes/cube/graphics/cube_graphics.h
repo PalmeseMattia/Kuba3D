@@ -66,8 +66,10 @@ void			dda_set_step_and_initial_side_dist(t_dda *dda);
 t_scene_setup	draw_scene(t_cube *cube);
 void			draw_clear_screen(void *img);
 double			framerate_get_ticks();
-void			mov_handle_keypress(t_cube *cube, t_scene_setup scene, int key_code);
+void			mov_handler(t_cube *cube);
 int				game_loop_hook(t_cube *cube);
 void			initialize_game(t_cube *cube);
+t_scene_setup	draw_prep_scene(t_cube *cube);
+void			close_cube(t_cube *cube);
 
 #endif

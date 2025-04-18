@@ -42,6 +42,10 @@ typedef struct	s_cube
 	size_t			time;
 	size_t			old_time;
 	t_bool			running;
+	
+	double			frame_time;
+
+	t_keys			*keys;
 }	t_cube;
 
 #endif

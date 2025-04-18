@@ -49,31 +49,35 @@ void calculate_and_draw_single_stripe(int x, t_scene_setup *scene_setup, t_cube 
 	draw_vertical_slice(x, dda.wall_height, dda.hit_type, cube);
 }
 
-// void	draw_clear_screen(void *img)
-// {
-// 	ft_memset(img->pixels, 255, img->width * img->height * sizeof(int32_t));
-// 	// printf("Screen cleared ❌\n");
-// }
-
-t_scene_setup draw_scene(t_cube *cube)
+t_scene_setup	draw_prep_scene(t_cube *cube)
 {
 	t_scene_setup scene_setup;
-	int x;
 
 	scene_setup.player_pos_x = cube->player->location.x;
 	scene_setup.player_pos_y = cube->player->location.y;
-
 	scene_setup.dir_vect.dir_x = cos(cube->player->angle);
 	scene_setup.dir_vect.dir_y = sin(cube->player->angle);
-
 	scene_setup.camera_plane_x = -scene_setup.dir_vect.dir_y * FOV;
 	scene_setup.camera_plane_y = scene_setup.dir_vect.dir_x * FOV;
+	return (scene_setup);
+}
 
+static void	clear_screen(t_cube *cube)
+{
 	if (cube->mlx_img->img)
 		mlx_destroy_image(cube->mlx, cube->mlx_img->img);
 	cube->mlx_img->img = mlx_new_image(cube->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	cube->mlx_img->addr = mlx_get_data_addr(cube->mlx_img->img, &cube->mlx_img->bits_per_pixel, &cube->mlx_img->line_length,
 		&cube->mlx_img->endian);
+}
+
+t_scene_setup draw_scene(t_cube *cube)
+{
+	t_scene_setup	scene_setup;
+	int				x;
+
+	scene_setup = draw_prep_scene(cube);
+	clear_screen(cube);
 	x = -1;
 	while (++x < WINDOW_WIDTH)
 		calculate_and_draw_single_stripe(x, &scene_setup, cube);

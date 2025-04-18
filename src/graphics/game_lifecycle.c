@@ -2,7 +2,7 @@
 #include <cube_graphics.h>
 #include <libft.h>
 
-static void	close_cube(t_cube *cube)
+void	close_cube(t_cube *cube)
 {
 	if (!cube)
 		return ;
@@ -58,6 +58,20 @@ static void	initialize_mlx(t_cube *cube)
 	cube->mlx_img->img = NULL;
 }
 
+void	initialize_keys(t_cube *cube)
+{
+	t_keys	keys;
+
+	keys.a = 0;
+	keys.d = 0;
+	keys.s = 0;
+	keys.w = 0;
+	keys.left = 0;
+	keys.right = 0;
+	keys.escape = 0;
+	cube->keys = &keys;
+}
+
 void	initialize_game(t_cube *cube)
 {
 	cube->settings = load_mock_data();
@@ -66,21 +80,20 @@ void	initialize_game(t_cube *cube)
 	cube->time = 0;
 	cube->old_time = 0;
 	cube->running = TRUE;
+	cube->frame_time = 0;
 	initialize_mlx(cube);
 }
 
 int game_loop_hook(t_cube *cube)
 {
-	t_scene_setup	scene;
-
 	if (!cube->running)
 	{
 		close_success(cube);
 		return (0);
 	}
-	scene = draw_scene(cube);
 	cube->old_time = cube->time;
 	cube->time = framerate_get_ticks();
-	mov_handle_keypress(cube, scene, 0);
+	draw_scene(cube);
+	mov_handler(cube);
 	return (0);
 }

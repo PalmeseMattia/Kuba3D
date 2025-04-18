@@ -10,7 +10,8 @@ int	main( void )
 
 	initialize_game(&cube);
 	print_map(*cube.map);
-	mlx_key_hook(cube.mlx_win, con_key_hook, &cube);
+	mlx_hook(cube.mlx_win, 2, 1L << 0, con_key_press, &cube);
+	mlx_hook(cube.mlx_win, 3, 1L << 1, con_key_release, &cube);
 	mlx_loop_hook(cube.mlx, game_loop_hook, &cube);
 	mlx_loop(cube.mlx);
 	return (EXIT_SUCCESS);

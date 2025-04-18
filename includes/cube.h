@@ -4,8 +4,9 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <unistd.h>
-# include "MLX42/MLX42.h"
+# include <mlx.h>
 # include <cube_mock.h>
+# include <cube_controls.h>
 
 # define WINDOW_WIDTH 640
 # define WINDOW_HEIGHT 480
@@ -20,17 +21,27 @@ typedef enum s_bool
 	TRUE
 }	t_bool;
 
+typedef struct	s_image_data {
+	void	*img;
+	char	*addr;
+	int		bits_per_pixel;
+	int		line_length;
+	int		endian;
+}	t_image_data;
+
 typedef struct	s_cube
 {
-	t_settings	*settings;
-	t_map		*map;
-	t_player	*player;
-	mlx_image_t	*img;
-	mlx_t		*mlx;
+	t_settings		*settings;
+	t_map			*map;
+	t_player		*player;
 
-	size_t		time;
-	size_t		old_time;
-	t_bool		running;
+	void			*mlx;
+	void			*mlx_win;
+	t_image_data	*mlx_img;
+
+	size_t			time;
+	size_t			old_time;
+	t_bool			running;
 }	t_cube;
 
 #endif

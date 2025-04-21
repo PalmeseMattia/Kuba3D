@@ -1,7 +1,7 @@
 #ifndef CUBE_MOCK_H
 # define CUBE_MOCK_H
 
-# define MAP_SIZE 16
+# define MAP_SIZE 24
 # define PLAYER_START_X 6
 # define PLAYER_START_Y (MAP_SIZE - 5)
 

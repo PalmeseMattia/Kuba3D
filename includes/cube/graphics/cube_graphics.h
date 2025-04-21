@@ -71,5 +71,6 @@ int				game_loop_hook(t_cube *cube);
 void			initialize_game(t_cube *cube);
 t_scene_setup	draw_prep_scene(t_cube *cube);
 void			close_cube(t_cube *cube);
+int				on_destroy(t_cube *cube);
 
 #endif

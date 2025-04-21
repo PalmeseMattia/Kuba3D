@@ -2,6 +2,12 @@
 #include <cube_graphics.h>
 #include <libft.h>
 
+int		on_destroy(t_cube *cube)
+{
+	con_key_press(KEY_ESC, cube);
+	return (0);
+}
+
 void	close_cube(t_cube *cube)
 {
 	if (!cube)

@@ -8,8 +8,8 @@
 # include <cube_mock.h>
 # include <cube_controls.h>
 
-# define WINDOW_WIDTH 640
-# define WINDOW_HEIGHT 480
+# define WINDOW_WIDTH 960
+# define WINDOW_HEIGHT 640
 # define FOV .66
 # define TILE_SIZE 1
 # define WINDOW_TITLE "Cub3D"

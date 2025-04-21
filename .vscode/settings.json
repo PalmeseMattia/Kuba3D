@@ -15,6 +15,7 @@
 		"mlx.h": "c",
 		"math.h": "c",
 		"utils.h": "c",
-		"libft.h": "c"
+		"libft.h": "c",
+		"x.h": "c"
 	}
 }

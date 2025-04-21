@@ -55,3 +55,24 @@ void	tex_load(const char **paths, t_cube *cube)
 		tex_single_load(paths[i], cube->textures[i], cube);
 	ft_printf("Textures initialized properly\n");
 }
+
+void	tex_get(t_cube *cube, t_dda dda)
+{
+	t_map	*map;
+
+	map = cube->map;
+
+	int texNum = map->tiles[dda.map_x][dda.map_y].c - '1';
+
+	double wallX;
+	// TODO: verify if vertical / horizontal
+	if (dda.hit_type == VERTICAL) wallX = dda.pos_y + dda.perp_wall_dist * dda.ray_dir_y;
+	else           wallX = dda.pos_x + dda.perp_wall_dist * dda.ray_dir_x;
+	wallX -= floor((wallX));
+
+	//x coordinate on the texture
+	int texX = (int)wallX * (double)TEXTURE_SIZE;
+	if(dda.hit_type == VERTICAL && dda.ray_dir_x > 0) texX = TEXTURE_SIZE - texX - 1;
+	if(dda.hit_type == HORIZONTAL && dda.ray_dir_y < 0) texX = TEXTURE_SIZE - texX - 1;
+
+}

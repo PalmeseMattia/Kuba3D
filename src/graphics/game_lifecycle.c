@@ -8,18 +8,18 @@ int		on_destroy(t_cube *cube)
 	return (0);
 }
 
-// static void	free_cube_textures(t_cube *cube)
-// {
-// 	int	i;
+static void	free_cube_textures(t_cube *cube)
+{
+	int	i;
 
-// 	i = -1;
-// 	if (cube && cube->textures)
-// 	{
-// 		while (++i < TEXTURES_COUNT)
-// 			free(cube->textures[i]);
-// 		free(cube->textures);
-// 	}
-// }
+	i = -1;
+	if (cube && cube->textures)
+	{
+		while (++i < TEXTURES_COUNT)
+			free(cube->textures[i]);
+		free(cube->textures);
+	}
+}
 
 void close_cube(t_cube *cube)
 {
@@ -43,8 +43,8 @@ void close_cube(t_cube *cube)
         mlx_destroy_window(cube->mlx, cube->mlx_win);
     if (cube->mlx)
         mlx_destroy_display(cube->mlx);
-    // if (cube->textures)
-    //  free_cube_textures(cube);
+    if (cube->textures)
+     free_cube_textures(cube);
     if (cube->keys)
         free(cube->keys);
 }
@@ -127,7 +127,7 @@ void	initialize_game(t_cube *cube)
 	cube->textures = NULL;
 	initialize_keys(cube);
 	initialize_mlx(cube);
-	// load_mock_textures(cube);
+	load_mock_textures(cube);
 }
 
 int game_loop_hook(t_cube *cube)

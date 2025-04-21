@@ -64,7 +64,7 @@ t_scene_setup	draw_prep_scene(t_cube *cube)
 
 static void	clear_screen(t_cube *cube)
 {
-	if (cube->mlx_img->img)
+	if (cube->mlx_img->img != NULL)
 		mlx_destroy_image(cube->mlx, cube->mlx_img->img);
 	cube->mlx_img->img = mlx_new_image(cube->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
 	cube->mlx_img->addr = mlx_get_data_addr(cube->mlx_img->img, &cube->mlx_img->bits_per_pixel, &cube->mlx_img->line_length,

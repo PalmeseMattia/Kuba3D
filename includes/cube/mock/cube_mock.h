@@ -12,11 +12,13 @@
 # define PLAYER_VIEWING_ANGLE M_PI;
 
 # include <parsing.h>
+typedef struct s_cube t_cube;
 
 t_color		load_mock_color( void );
 t_settings	*load_mock_data( void );
 t_map		*load_mock_map( void );
 t_player	*load_mock_player( void );
 int			is_within_map_bounds(t_point pt, t_map map);
+void		load_mock_textures(t_cube *cube);
 
 #endif

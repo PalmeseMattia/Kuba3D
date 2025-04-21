@@ -7,6 +7,18 @@
 # define WALL_COLOR_LIGHT 0xFF8888FF
 # define WALL_COLOR_DARK 0x880000FF
 
+# define WINDOW_WIDTH 960
+# define WINDOW_HEIGHT 640
+
+# define TEXTURES_COUNT 1
+# define TEXELS_COUNT (WINDOW_HEIGHT * WINDOW_WIDTH)
+# define TEXTURE_SIZE 64
+
+typedef struct	s_tex
+{
+	unsigned int	*texels;
+}	t_tex;
+
 typedef enum s_hit_type
 {
 	VERTICAL,
@@ -57,14 +69,14 @@ typedef struct s_dda
 	double	perp_wall_dist;
 }	t_dda;
 
-# include <cube.h>
+typedef struct s_cube t_cube;
+typedef struct	s_image_data t_image_data;
 
 void			dda_set_wall_height(t_dda *dda);
 void			dda_init(t_dda *dda, t_scene_setup *scene_setup, double camera_x);
 void			dda_perform(t_dda *dda, t_cube *cube);
 void			dda_set_step_and_initial_side_dist(t_dda *dda);
 t_scene_setup	draw_scene(t_cube *cube);
-void			draw_clear_screen(void *img);
 double			framerate_get_ticks();
 void			mov_handler(t_cube *cube);
 int				game_loop_hook(t_cube *cube);
@@ -72,5 +84,6 @@ void			initialize_game(t_cube *cube);
 t_scene_setup	draw_prep_scene(t_cube *cube);
 void			close_cube(t_cube *cube);
 int				on_destroy(t_cube *cube);
+void			tex_load(const char **paths, t_cube *cube);
 
 #endif

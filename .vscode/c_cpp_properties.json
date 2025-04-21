@@ -3,7 +3,8 @@
         "myIncludePath": [
             "${workspaceFolder}/includes",
             "${workspaceFolder}/lib/libft",
-            "${workspaceFolder}/lib/mlx",
+            "${workspaceFolder}/lib/mlx_mac",
+            "${workspaceFolder}/lib/mlx_linux",
             "${workspaceFolder}/includes/cube/mock",
             "${workspaceFolder}/includes/cube/parsing",
             "${workspaceFolder}/includes/cube/utils",

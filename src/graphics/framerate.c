@@ -1,4 +1,5 @@
 #include <sys/time.h>
+#include <stdlib.h>
 
 double framerate_get_ticks()
 {

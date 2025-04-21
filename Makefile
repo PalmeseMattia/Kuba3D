@@ -1,32 +1,55 @@
-NAME	:= Cube
-CFLAGS	:= -Wextra -Wall -Werror
-LIBMLX	:= ./lib/mlx
+NAME := Cube
+CFLAGS := -Wextra -Wall -Werror -O0 -g
 LIBLIBFT := ./lib/libft
+HEADERS := -I ./includes/ -I $(LIBLIBFT) -I ./includes/cube/mock/ -I ./includes/cube/parsing/ -I ./includes/cube/utils/ -I ./includes/cube/graphics/ -I ./includes/cube/controls/
 
-# Apple Silicon
-APPLE_SILICON_FLAGS = -framework Cocoa -framework OpenGL -framework IOKit
-GLFW_LIB = -L"/opt/homebrew/Cellar/glfw/3.4/lib/"
-# / Apple Silicon
+# OS detection
+UNAME_S := $(shell uname -s)
 
-HEADERS	:=  -I ./includes/ -I $(LIBLIBFT) -I $(LIBMLX)/ -I ./includes/cube/mock/ -I ./includes/cube/parsing/ -I ./includes/cube/utils/ -I ./includes/cube/graphics/ -I ./includes/cube/controls/ -I /usr/X11/include
-LIBS	:= $(LIBMLX)/libmlx.a -ldl -lglfw -pthread -lm $(GLFW_LIB) $(LIBLIBFT)/libft.a
-SRCS	:= $(shell find ./src -iname "*.c")
-OBJS	:= ${SRCS:.c=.o}
-X11_FLAGS = -L/usr/X11/lib -lXext -lX11
+# Linux configuration
+ifeq ($(UNAME_S),Linux)
+    LIBMLX := ./lib/mlx_linux
+    LIBS := $(LIBMLX)/libmlx.a -lXext -lX11 -lm $(LIBLIBFT)/libft.a
+    HEADERS += -I $(LIBMLX) -I /usr/include/X11
+endif
+
+# macOS configuration
+ifeq ($(UNAME_S),Darwin)
+    LIBMLX := ./lib/mlx_mac
+    # Check for Apple Silicon
+    UNAME_M := $(shell uname -m)
+    ifeq ($(UNAME_M),arm64)
+        # Apple Silicon
+        GLFW_LIB = -L"/opt/homebrew/Cellar/glfw/3.4/lib/"
+    else
+        # Intel Mac
+        GLFW_LIB = -L"/usr/local/Cellar/glfw/3.4/lib/"
+    endif
+    LIBS := $(LIBMLX)/libmlx.a -framework Cocoa -framework OpenGL -framework IOKit -ldl -lglfw -pthread -lm $(GLFW_LIB) $(LIBLIBFT)/libft.a
+    HEADERS += -I $(LIBMLX) -I /usr/X11/include
+    X11_FLAGS = -L/usr/X11/lib -lXext -lX11
+endif
+
+SRCS := $(shell find ./src -iname "*.c")
+OBJS := ${SRCS:.c=.o}
 
 all: liblibft libmlx $(NAME)
 
 liblibft:
-	@cd $(LIBLIBFT) && make 
+	@cd $(LIBLIBFT) && make
 
 libmlx:
-	cd $(LIBMLX) && make
+	@cd $(LIBMLX) && make
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)"
+	@$(CC) $(CFLAGS) -o $@ -c $< $(HEADERS) && printf "Compiling: $(notdir $<)\n"
 
 $(NAME): $(OBJS)
+ifeq ($(UNAME_S),Darwin)
 	@$(CC) $(OBJS) $(LIBS) $(HEADERS) $(X11_FLAGS) -o $(NAME)
+else
+	@$(CC) $(OBJS) $(LIBS) $(HEADERS) -o $(NAME)
+endif
 
 clean:
 	@rm -rf $(OBJS)
@@ -35,8 +58,8 @@ clean:
 
 fclean: clean
 	@rm -rf $(NAME)
-	@rm $(LIBLIBFT)/libft.a
+	@rm -f $(LIBLIBFT)/libft.a
 
 re: clean all
 
-.PHONY: all, clean, fclean, re, libmlx
+.PHONY: all clean fclean re libmlx liblibft

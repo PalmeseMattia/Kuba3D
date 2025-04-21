@@ -7,8 +7,6 @@
 # define WALL_COLOR_LIGHT 0xFF8888FF
 # define WALL_COLOR_DARK 0x880000FF
 
-# include <cube.h>
-
 typedef enum s_hit_type
 {
 	VERTICAL,
@@ -28,7 +26,7 @@ typedef struct	s_scene_setup
 	double	player_pos_x;
 	double	player_pos_y;
 
-	double	camera_plane_x;
+	double	camera_plane_x;	
 	double	camera_plane_y;
 }	t_scene_setup;
 
@@ -59,21 +57,20 @@ typedef struct s_dda
 	double	perp_wall_dist;
 }	t_dda;
 
-typedef struct	s_image_data {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}	t_image_data;
+# include <cube.h>
 
 void			dda_set_wall_height(t_dda *dda);
 void			dda_init(t_dda *dda, t_scene_setup *scene_setup, double camera_x);
 void			dda_perform(t_dda *dda, t_cube *cube);
 void			dda_set_step_and_initial_side_dist(t_dda *dda);
 t_scene_setup	draw_scene(t_cube *cube);
-void			draw_clear_screen(mlx_image_t *img);
+void			draw_clear_screen(void *img);
 double			framerate_get_ticks();
-void			mov_handle_keypress(t_cube *cube, t_scene_setup scene);
+void			mov_handler(t_cube *cube);
+int				game_loop_hook(t_cube *cube);
+void			initialize_game(t_cube *cube);
+t_scene_setup	draw_prep_scene(t_cube *cube);
+void			close_cube(t_cube *cube);
+int				on_destroy(t_cube *cube);
 
 #endif

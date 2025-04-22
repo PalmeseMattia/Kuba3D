@@ -6,7 +6,7 @@
 /*   By: jnenczak <jnenczak@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:15:33 by jnenczak          #+#    #+#             */
-/*   Updated: 2025/04/21 22:35:36 by jnenczak         ###   ########.fr       */
+/*   Updated: 2025/04/22 16:38:48 by jnenczak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	is_within_map_bounds(t_point pt, t_map map)
 void	load_mock_textures(t_cube *cube)
 {
 	const char *paths[TEXTURES_COUNT] = {
-		"assets/textures/wall_tron.xpm",
+		"assets/textures/tron_wall.xpm",
 	};
 	tex_load(paths, cube);
 }

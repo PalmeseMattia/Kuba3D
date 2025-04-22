@@ -12,7 +12,7 @@
 
 # define TEXTURES_COUNT 1
 # define TEXELS_COUNT (WINDOW_HEIGHT * WINDOW_WIDTH)
-# define TEXTURE_SIZE 64
+# define TEXTURE_SIZE 512
 
 typedef struct	s_tex
 {

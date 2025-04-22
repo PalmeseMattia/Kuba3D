@@ -45,7 +45,7 @@ void draw_textured_vertical_slice(int column_x, t_dda *dda, t_cube *cube)
     // Calculate the step to navigate through texture
     double step = 1.0 * TEXTURE_SIZE / dda->wall_height;
     // Starting texture coordinate
-    double texPos = (wall_top - WINDOW_HEIGHT / 2.0 + dda->wall_height / 2.0) * step;
+    double texPos = (wall_top < 0) ? -wall_top * step : 0;
     
     y = -1;
     while (++y < WINDOW_HEIGHT)
@@ -56,15 +56,12 @@ void draw_textured_vertical_slice(int column_x, t_dda *dda, t_cube *cube)
         {
             int texY = (int)texPos & (TEXTURE_SIZE - 1);
             texPos += step;
-
-			// printf("texY: %d, texPos: %f\n", texY, texPos);
             
             // Check if the texture exists and is properly loaded
             if (cube->textures && cube->textures[texNum] && cube->textures[texNum]->texels)
             {
                 unsigned int color = cube->textures[texNum]->texels[TEXTURE_SIZE * texY + texX];
-				// printf("Drawing pixel with color: %u\n", color);
-                
+
                 // Make color darker for horizontal hits
                 if (dda->hit_type == HORIZONTAL) 
                     color = (color >> 1) & 8355711; // Reduces brightness by half

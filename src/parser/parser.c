@@ -41,6 +41,30 @@ t_settings	*new_settings()
 	return (settings);
 }
 
+void	parse_cardinal(char *line, t_texture *texture)
+{
+	char	**splitted;
+	int		size;
+
+	splitted = ft_split(line, ' ');
+	size = ft_strarr_len(splitted);
+	if (size != 2)
+	{
+		printf("I don\'t know WTF are you trying to do. ");
+		printf("I will use some default settings here! \n");
+	} else {
+		if (texture -> path != NULL)
+		{
+			printf("Overriding texture\n"); 
+			free(texture->path);
+		}
+		texture->path = ft_calloc(ft_strlen(splitted[1]), sizeof(char));
+		ft_strncpy(texture->path, splitted[1], ft_strlen(splitted[1]) - 1);
+		printf("Added texture: %s\n", texture->path);
+	}
+	//TODO: free splitted
+}
+
 void parse_settings(char *file_path)
 {
 	int			fd;
@@ -58,25 +82,10 @@ void parse_settings(char *file_path)
 	settings = new_settings();
 	while ((line = get_next_line(fd))) {
 		for (int i = 0; i < 4; i++) {
-			if ((ft_strncmp(line, cardinals[i], 2)) == 0) {
-				printf("Found cardinal point %s\n", cardinals[i]);
-				splitted = ft_split(line, ' ');
-				int size = ft_strarr_len(splitted);
-				if (size != 2)
-				{
-					printf("I don\'t know WTF are you trying to do. ");
-					printf("I will use some default settings here! \n");
-				} else {
-					if (settings->textures[i].path != NULL)
-					{
-						printf("Overriding texture for %s\n", cardinals[i]);
-						free(settings->textures[i].path);
-					}
-					settings->textures[i].path = ft_calloc(ft_strlen(splitted[1]), sizeof(char));
-					ft_strncpy(settings->textures[i].path, splitted[1], ft_strlen(splitted[1]) - 1);
-					printf("Added texture: %s\n", settings->textures[i].path);
-				}
-				//TODO: free splitted
+			if ((ft_strncmp(line, cardinals[i], 2)) == 0)
+			{
+				parse_cardinal(line, &settings->textures[i]);
+				break;
 			}
 		}
 		if (ft_strncmp(line, "F ", 2) == 0) {

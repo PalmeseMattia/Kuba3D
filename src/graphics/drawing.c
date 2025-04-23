@@ -23,6 +23,36 @@ static double	draw_get_wall_x(t_dda *dda, t_cube *cube)
 	return (wall_x);
 }
 
+static t_wall_face_hit	draw_determine_face_hit(t_dda *dda, t_cube *cube)
+{
+	t_vect			dir_vect;
+	t_wall_face_hit	wall_face_hit;
+
+	(void)dda;
+	dir_vect.dir_x = cos(cube->player->angle);
+	dir_vect.dir_y = sin(cube->player->angle);
+	printf("DirX: %f, DirY: %f, Hit Type: %s\n", dir_vect.dir_x, dir_vect.dir_y, dda->hit_type == VERTICAL ? "Vertical": "Horizontal");
+	// EAST FACE: (DirX >= 0 && DirX <= 1 && dda->hit_type == HORIZONTAL)
+	// SOUTH FACE: (DirX >= -1 && DirX <= 1 && DirY <= 0 && DirY >= -1 && dda->hit_type == VERTICAL)
+	// WEST FACE: (DirX >= -1 DirX >= 0 && dda->hit_type == HORIZONTAL)
+	// NORTH FACE: (DirX >= -1 DirX <= 1 && DirY >= 0 && DirY <= 1 && dda->hit_type == VERTICAL)
+	if (dir_vect.dir_x >= 0 && dir_vect.dir_x <= 1 && dda->hit_type == HORIZONTAL)
+		wall_face_hit = WALL_FACE_EAST;
+		
+		if (dir_vect.dir_x >= -1 && dir_vect.dir_x <= 1 && dir_vect.dir_y <= 0 && dir_vect.dir_y >= -1 && dda->hit_type == VERTICAL)
+		wall_face_hit = WALL_FACE_NORTH;
+		// wall_face_hit = WALL_FACE_SOUTH;
+		
+		if (dir_vect.dir_x >= -1 && dir_vect.dir_x <= 0 && dda->hit_type == HORIZONTAL)
+			wall_face_hit = WALL_FACE_EAST;
+		// wall_face_hit = WALL_FACE_WEST;
+	
+	if (dir_vect.dir_x >= -1 && dir_vect.dir_x <= 1 && dir_vect.dir_y >= 0 && dir_vect.dir_y <= 1 && dda->hit_type == HORIZONTAL)
+		wall_face_hit = WALL_FACE_NORTH;
+	
+	return (wall_face_hit);
+}
+
 static t_draw_vertical_slice_data	draw_prep_vertical_slice_data(t_dda *dda, t_cube *cube, int column_x)
 {
 	t_draw_vertical_slice_data	data;
@@ -30,7 +60,8 @@ static t_draw_vertical_slice_data	draw_prep_vertical_slice_data(t_dda *dda, t_cu
 	data.tex_num = 0;
 	if (cube->map->tiles[dda->map_y][dda->map_x].c >= '1' && 
         cube->map->tiles[dda->map_y][dda->map_x].c <= '0' + TEXTURES_COUNT)
-        data.tex_num = cube->map->tiles[dda->map_y][dda->map_x].c - '1';
+		data.tex_num = (int)draw_determine_face_hit(dda, cube);
+        // data.tex_num = cube->map->tiles[dda->map_y][dda->map_x].c - '1';
     data.tex_x = (int)(draw_get_wall_x(dda, cube) * (double)TEXTURE_SIZE);
     if(dda->hit_type == HORIZONTAL && dda->ray_dir_x > 0)
         data.tex_x = TEXTURE_SIZE - data.tex_x - 1;
@@ -62,6 +93,7 @@ static void	draw_textured(t_draw_vertical_slice_data *data, t_cube *cube, t_dda 
 		draw_my_mlx_pixel_put(cube->mlx_img, data->column_x, y, color);
 	}
 }
+
 
 void draw_textured_vertical_slice(int column_x, t_dda *dda, t_cube *cube)
 {

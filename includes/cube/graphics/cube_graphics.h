@@ -10,7 +10,7 @@
 # define WINDOW_WIDTH 960
 # define WINDOW_HEIGHT 640
 
-# define TEXTURES_COUNT 1
+# define TEXTURES_COUNT 2
 # define TEXELS_COUNT (WINDOW_HEIGHT * WINDOW_WIDTH)
 # define TEXTURE_SIZE 512
 
@@ -18,6 +18,14 @@ typedef struct	s_tex
 {
 	unsigned int	*texels;
 }	t_tex;
+
+typedef enum s_wall_face_hit
+{
+	WALL_FACE_NORTH,
+	WALL_FACE_EAST,
+	WALL_FACE_SOUTH,
+	WALL_FACE_WEST
+}	t_wall_face_hit;
 
 typedef enum s_hit_type
 {
@@ -67,6 +75,9 @@ typedef struct s_dda
 	// Drawing
 	double	wall_height;
 	double	perp_wall_dist;
+
+	// Wall face
+	t_wall_face_hit	wall_face_hit;
 }	t_dda;
 
 typedef struct	s_draw_vertical_slice_data

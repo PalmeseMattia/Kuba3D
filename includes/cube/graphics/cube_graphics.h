@@ -1,11 +1,11 @@
 #ifndef CUBE_GRAPHICS_H
 # define CUBE_GRAPHICS_H
 
-# define CEILING_COLOR 0x00FF00FF
-# define FLOOR_COLOR 0x0000FFFF
+# define CEILING_COLOR 0x000000FF
+# define FLOOR_COLOR 0x808080FF
 
-# define WALL_COLOR_LIGHT 0xFF8888FF
-# define WALL_COLOR_DARK 0x880000FF
+# define WALL_COLOR_LIGHT 0x880000FF
+# define WALL_COLOR_DARK 0xFF8888FF
 
 # define WINDOW_WIDTH 960
 # define WINDOW_HEIGHT 640
@@ -69,7 +69,19 @@ typedef struct s_dda
 	double	perp_wall_dist;
 }	t_dda;
 
-typedef struct s_cube t_cube;
+typedef struct	s_draw_vertical_slice_data
+{
+    int		y;
+	double	step;
+	double	wall_top;
+    double	wall_bottom;
+    int		tex_num;
+	int		tex_x;
+	double	tex_pos;
+	int		column_x;
+}	t_draw_vertical_slice_data;
+
+typedef struct	s_cube t_cube;
 typedef struct	s_image_data t_image_data;
 
 void			dda_set_wall_height(t_dda *dda);

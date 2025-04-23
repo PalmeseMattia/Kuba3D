@@ -3,7 +3,7 @@
 #include <math.h>
 #include <libft.h>
 
-void	my_mlx_pixel_put(t_image_data *data, int x, int y, int color)
+void	draw_my_mlx_pixel_put(t_image_data *data, int x, int y, int color)
 {
 	char	*dst;
 
@@ -11,97 +11,90 @@ void	my_mlx_pixel_put(t_image_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
+static double	draw_get_wall_x(t_dda *dda, t_cube *cube)
+{
+	double	wall_x;
+
+	if (dda->hit_type == HORIZONTAL)
+        wall_x = cube->player->location.y + dda->perp_wall_dist * dda->ray_dir_y;
+    else
+        wall_x = cube->player->location.x + dda->perp_wall_dist * dda->ray_dir_x;
+    wall_x -= floor(wall_x);
+	return (wall_x);
+}
+
+static t_draw_vertical_slice_data	draw_prep_vertical_slice_data(t_dda *dda, t_cube *cube, int column_x)
+{
+	t_draw_vertical_slice_data	data;
+
+	data.tex_num = 0;
+	if (cube->map->tiles[dda->map_y][dda->map_x].c >= '1' && 
+        cube->map->tiles[dda->map_y][dda->map_x].c <= '0' + TEXTURES_COUNT)
+        data.tex_num = cube->map->tiles[dda->map_y][dda->map_x].c - '1';
+    data.tex_x = (int)(draw_get_wall_x(dda, cube) * (double)TEXTURE_SIZE);
+    if(dda->hit_type == HORIZONTAL && dda->ray_dir_x > 0)
+        data.tex_x = TEXTURE_SIZE - data.tex_x - 1;
+    if(dda->hit_type == VERTICAL && dda->ray_dir_y < 0)
+        data.tex_x = TEXTURE_SIZE - data.tex_x - 1;
+    data.wall_top = ((WINDOW_HEIGHT / 2.0) - (dda->wall_height / 2.0));
+    data.wall_bottom = ((WINDOW_HEIGHT / 2.0) + (dda->wall_height / 2.0));
+    data.step = 1.0 * TEXTURE_SIZE / dda->wall_height;
+	if (data.wall_top < 0)
+		data.tex_pos = -data.wall_top * data.step;
+	else
+		data.tex_pos = 0;
+	data.column_x = column_x;
+	return (data);
+}
+
+static void	draw_textured(t_draw_vertical_slice_data *data, t_cube *cube, t_dda *dda, int y)
+{
+	int				tex_y;
+	unsigned int	color;
+
+	tex_y = (int)data->tex_pos & (TEXTURE_SIZE - 1);
+	data->tex_pos += data->step;
+	if (cube->textures && cube->textures[data->tex_num] && cube->textures[data->tex_num]->texels)
+	{
+		color = cube->textures[data->tex_num]->texels[TEXTURE_SIZE * tex_y + data->tex_x];
+		if (dda->hit_type == HORIZONTAL) 
+			color = (color >> 1) & 8355711;
+		draw_my_mlx_pixel_put(cube->mlx_img, data->column_x, y, color);
+	}
+}
+
 void draw_textured_vertical_slice(int column_x, t_dda *dda, t_cube *cube)
 {
-    double wall_top;
-    double wall_bottom;
-    int y;
-    int texNum = 0; // Default texture index, adjust as needed
+    t_draw_vertical_slice_data	data;
+	int							y;
     
-    // Extract the texture number from the map character (assuming '1', '2', etc. represent different textures)
-    if (cube->map->tiles[dda->map_y][dda->map_x].c >= '1' && 
-        cube->map->tiles[dda->map_y][dda->map_x].c <= '0' + TEXTURES_COUNT)
-        texNum = cube->map->tiles[dda->map_y][dda->map_x].c - '1';
-    
-    // Calculate the exact position where the wall was hit
-    double wallX;
-    if (dda->hit_type == HORIZONTAL)
-        wallX = cube->player->location.y + dda->perp_wall_dist * dda->ray_dir_y;
-    else
-        wallX = cube->player->location.x + dda->perp_wall_dist * dda->ray_dir_x;
-    wallX -= floor(wallX);
-    
-    // Calculate texture X coordinate
-    int texX = (int)(wallX * (double)TEXTURE_SIZE);
-    if(dda->hit_type == HORIZONTAL && dda->ray_dir_x > 0)
-        texX = TEXTURE_SIZE - texX - 1;
-    if(dda->hit_type == VERTICAL && dda->ray_dir_y < 0)
-        texX = TEXTURE_SIZE - texX - 1;
-    
-    // Calculate wall height and drawing boundaries
-    wall_top = ((WINDOW_HEIGHT / 2.0) - (dda->wall_height / 2.0));
-    wall_bottom = ((WINDOW_HEIGHT / 2.0) + (dda->wall_height / 2.0));
-    
-    // Calculate the step to navigate through texture
-    double step = 1.0 * TEXTURE_SIZE / dda->wall_height;
-    // Starting texture coordinate
-    double texPos = (wall_top < 0) ? -wall_top * step : 0;
-    
+    data = draw_prep_vertical_slice_data(dda, cube, column_x);
     y = -1;
     while (++y < WINDOW_HEIGHT)
     {
-        if (y < wall_top)
-            my_mlx_pixel_put(cube->mlx_img, column_x, y, CEILING_COLOR);
-        else if (y >= wall_top && y <= wall_bottom)
-        {
-            int texY = (int)texPos & (TEXTURE_SIZE - 1);
-            texPos += step;
-            
-            // Check if the texture exists and is properly loaded
-            if (cube->textures && cube->textures[texNum] && cube->textures[texNum]->texels)
-            {
-                unsigned int color = cube->textures[texNum]->texels[TEXTURE_SIZE * texY + texX];
-
-                // Make color darker for horizontal hits
-                if (dda->hit_type == HORIZONTAL) 
-                    color = (color >> 1) & 8355711; // Reduces brightness by half
-                
-                my_mlx_pixel_put(cube->mlx_img, column_x, y, color);
-            }
-            else
-            {
-                // Fallback if texture not available
-                if (dda->hit_type == VERTICAL)
-                    my_mlx_pixel_put(cube->mlx_img, column_x, y, WALL_COLOR_DARK);
-                else
-                    my_mlx_pixel_put(cube->mlx_img, column_x, y, WALL_COLOR_LIGHT);
-            }
-        }
+        if (y < data.wall_top)
+            draw_my_mlx_pixel_put(cube->mlx_img, column_x, y, CEILING_COLOR);
+        else if (y >= data.wall_top && y <= data.wall_bottom)
+            draw_textured(&data, cube, dda, y);
         else
-            my_mlx_pixel_put(cube->mlx_img, column_x, y, FLOOR_COLOR);
+            draw_my_mlx_pixel_put(cube->mlx_img, column_x, y, FLOOR_COLOR);
     }
 }
 
-// Update the existing calculate_and_draw_single_stripe function to use the textured version
-void calculate_and_draw_single_stripe(int x, t_scene_setup *scene_setup, t_cube *cube)
+void	draw_calculate_and_draw_single_stripe(int x, t_scene_setup *scene_setup, t_cube *cube)
 {
-    t_dda dda;
-    double camera_x;
+    t_dda	dda;
+    double	camera_x;
 
     camera_x = 2 * x / (double)WINDOW_WIDTH - 1;
     dda_init(&dda, scene_setup, camera_x);
     dda_set_step_and_initial_side_dist(&dda);
     dda_perform(&dda, cube);
-    
-    // Calculate perpendicular wall distance for proper texture mapping
     if (dda.hit_type == HORIZONTAL)
         dda.perp_wall_dist = (dda.side_dist_x - dda.delta_dist_x);
     else
         dda.perp_wall_dist = (dda.side_dist_y - dda.delta_dist_y);
-    
     dda_set_wall_height(&dda);
-    
-    // Use textured drawing function
     draw_textured_vertical_slice(x, &dda, cube);
 }
 
@@ -118,7 +111,7 @@ t_scene_setup	draw_prep_scene(t_cube *cube)
 	return (scene_setup);
 }
 
-static void	clear_screen(t_cube *cube)
+static void	draw_clear_screen(t_cube *cube)
 {
 	if (cube->mlx_img->img != NULL)
 		mlx_destroy_image(cube->mlx, cube->mlx_img->img);
@@ -133,10 +126,10 @@ t_scene_setup draw_scene(t_cube *cube)
 	int				x;
 
 	scene_setup = draw_prep_scene(cube);
-	clear_screen(cube);
+	draw_clear_screen(cube);
 	x = -1;
 	while (++x < WINDOW_WIDTH)
-		calculate_and_draw_single_stripe(x, &scene_setup, cube);
+		draw_calculate_and_draw_single_stripe(x, &scene_setup, cube);
 	mlx_put_image_to_window(cube->mlx, cube->mlx_win, cube->mlx_img->img, 0, 0);
 	return (scene_setup);
 }

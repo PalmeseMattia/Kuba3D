@@ -3,18 +3,18 @@
 #include <cube_controls.h>
 #include <math.h>
 
-static void	handle_left_right(t_cube *cube, double move_speed)
+static void handle_left_right(t_cube *cube, double move_speed)
 {
-	double	new_x;
-	double	new_y;
-	t_point	*pos;
-	t_vect	mod_dir_vect;
+	double new_x;
+	double new_y;
+	t_point *pos;
+	t_vect mod_dir_vect;
 
 	pos = &cube->player->location;
 	if (cube->keys->a)
 	{
-		mod_dir_vect.dir_x = cos(cube->player->angle + M_PI /  2);
-		mod_dir_vect.dir_y = sin(cube->player->angle + M_PI /  2);
+		mod_dir_vect.dir_x = cos(cube->player->angle + M_PI / 2);
+		mod_dir_vect.dir_y = sin(cube->player->angle + M_PI / 2);
 		new_x = pos->x - mod_dir_vect.dir_x * move_speed;
 		new_y = pos->y - mod_dir_vect.dir_y * move_speed;
 		if (cube->map->tiles[(int)new_y][(int)new_x].c == '0')
@@ -25,8 +25,8 @@ static void	handle_left_right(t_cube *cube, double move_speed)
 	}
 	else if (cube->keys->d)
 	{
-		mod_dir_vect.dir_x = cos(cube->player->angle + M_PI /  2);
-		mod_dir_vect.dir_y = sin(cube->player->angle + M_PI /  2);
+		mod_dir_vect.dir_x = cos(cube->player->angle + M_PI / 2);
+		mod_dir_vect.dir_y = sin(cube->player->angle + M_PI / 2);
 		new_x = pos->x + mod_dir_vect.dir_x * move_speed;
 		new_y = pos->y + mod_dir_vect.dir_y * move_speed;
 		if (cube->map->tiles[(int)new_y][(int)new_x].c == '0')
@@ -34,14 +34,14 @@ static void	handle_left_right(t_cube *cube, double move_speed)
 			pos->x = new_x;
 			pos->y = new_y;
 		}
-	}	
+	}
 }
 
-static void	handle_for_back(t_cube *cube, t_scene_setup scene, double move_speed)
+static void handle_for_back(t_cube *cube, t_scene_setup scene, double move_speed)
 {
-	double	new_x;
-	double	new_y;
-	t_point	*pos;
+	double new_x;
+	double new_y;
+	t_point *pos;
 
 	pos = &cube->player->location;
 	if (cube->keys->w)
@@ -66,7 +66,7 @@ static void	handle_for_back(t_cube *cube, t_scene_setup scene, double move_speed
 	}
 }
 
-static void	handle_rotation(t_cube *cube, double r_speed)
+static void handle_rotation(t_cube *cube, double r_speed)
 {
 	if (cube->keys->right)
 		cube->player->angle += r_speed;
@@ -74,11 +74,11 @@ static void	handle_rotation(t_cube *cube, double r_speed)
 		cube->player->angle -= r_speed;
 }
 
-void	mov_handler(t_cube *cube)
+void mov_handler(t_cube *cube)
 {
-	double			m_speed;
-	double			r_speed;
-	t_scene_setup	scene;
+	double m_speed;
+	double r_speed;
+	t_scene_setup scene;
 
 	scene = draw_prep_scene(cube);
 	cube->frame_time = (cube->time - cube->old_time) / 1000.0;
@@ -94,44 +94,44 @@ void	mov_handler(t_cube *cube)
 		close_cube(cube);
 }
 
-int	con_key_press(int key_code, t_cube *cube)
+int con_key_press(int key_code, t_cube *cube)
 {
-	t_keys	*keys;
-	
+	t_keys *keys;
+
 	keys = cube->keys;
-    if (key_code == KEY_W)
-        keys->w = 1;
-    else if (key_code == KEY_A)
-        keys->a = 1;
-    else if (key_code == KEY_S)
-        keys->s = 1;
-    else if (key_code == KEY_D)
-        keys->d = 1;
-    else if (key_code == KEY_ARROW_LEFT)
-        keys->left = 1;
-    else if (key_code == KEY_ARROW_RIGHT)
-        keys->right = 1;
-    else if (key_code == KEY_ESC)
-        keys->escape = 1;
+	if (key_code == KEY_W)
+		keys->w = 1;
+	else if (key_code == KEY_A)
+		keys->a = 1;
+	else if (key_code == KEY_S)
+		keys->s = 1;
+	else if (key_code == KEY_D)
+		keys->d = 1;
+	else if (key_code == KEY_ARROW_LEFT)
+		keys->left = 1;
+	else if (key_code == KEY_ARROW_RIGHT)
+		keys->right = 1;
+	else if (key_code == KEY_ESC)
+		keys->escape = 1;
 	return (0);
 }
 
-int	con_key_release(int key_code, t_cube *cube)
+int con_key_release(int key_code, t_cube *cube)
 {
-	t_keys	*keys;
-	
+	t_keys *keys;
+
 	keys = cube->keys;
-    if (key_code == KEY_W)
-        keys->w = 0;
-    else if (key_code == KEY_A)
-        keys->a = 0;
-    else if (key_code == KEY_S)
-        keys->s = 0;
-    else if (key_code == KEY_D)
-        keys->d = 0;
-    else if (key_code == KEY_ARROW_LEFT)
-        keys->left = 0;
-    else if (key_code == KEY_ARROW_RIGHT)
-        keys->right = 0;
+	if (key_code == KEY_W)
+		keys->w = 0;
+	else if (key_code == KEY_A)
+		keys->a = 0;
+	else if (key_code == KEY_S)
+		keys->s = 0;
+	else if (key_code == KEY_D)
+		keys->d = 0;
+	else if (key_code == KEY_ARROW_LEFT)
+		keys->left = 0;
+	else if (key_code == KEY_ARROW_RIGHT)
+		keys->right = 0;
 	return (0);
 }

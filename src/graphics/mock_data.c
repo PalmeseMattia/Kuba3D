@@ -6,12 +6,13 @@
 /*   By: jnenczak <jnenczak@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:15:33 by jnenczak          #+#    #+#             */
-/*   Updated: 2025/04/18 21:08:03 by jnenczak         ###   ########.fr       */
+/*   Updated: 2025/04/23 22:04:35 by jnenczak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cube_mock.h>
 #include <stdlib.h>
+#include <cube_graphics.h>
 
 t_color	load_mock_color( void )
 {
@@ -33,10 +34,7 @@ t_settings	*load_mock_data( void )
 		return (NULL);
 	ret->ceiling = load_mock_color();
 	ret->floor = load_mock_color();
-	ret->textures[0].path = "assets/textures/birch_planks.png";
-	ret->textures[1].path = "assets/textures/birch_planks.png";
-	ret->textures[2].path = "assets/textures/birch_planks.png";
-	ret->textures[3].path = "assets/textures/birch_planks.png";
+	// ret->textures = NULL;
 	return (ret);
 }
 
@@ -100,7 +98,7 @@ t_player	*load_mock_player( void )
 		return (NULL);
 	ret->location.x = PLAYER_START_X;
 	ret->location.y = PLAYER_START_Y;
-	ret->angle = PLAYER_VIEWING_ANGLE; // slightly rotated from straight left
+	ret->angle = PLAYER_VIEWING_ANGLE;
 
 	// TODO: Remove artificial offset once controls work
 	ret->angle -= 0.2;
@@ -112,4 +110,15 @@ int	is_within_map_bounds(t_point pt, t_map map)
 {
 	(void)map;
 	return ((pt.x >= 0 && pt.x < MAP_SIZE) && (pt.y >= 0 && pt.x < MAP_SIZE));
+}
+
+void	load_mock_textures(t_cube *cube)
+{
+	const char *paths[TEXTURES_COUNT] = {
+		"assets/textures/wall_north.xpm",
+		"assets/textures/wall_east.xpm",
+		"assets/textures/wall_south.xpm",
+		"assets/textures/wall_west.xpm",
+	};
+	tex_load(paths, cube);
 }

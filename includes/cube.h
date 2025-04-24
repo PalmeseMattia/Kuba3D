@@ -8,8 +8,6 @@
 # include <cube_mock.h>
 # include <cube_controls.h>
 
-# define WINDOW_WIDTH 960
-# define WINDOW_HEIGHT 640
 # define FOV .66
 # define TILE_SIZE 1
 # define WINDOW_TITLE "Cub3D"
@@ -29,6 +27,8 @@ typedef struct	s_image_data {
 	int		endian;
 }	t_image_data;
 
+typedef struct	s_tex	t_tex;
+
 typedef struct	s_cube
 {
 	t_settings		*settings;
@@ -46,6 +46,8 @@ typedef struct	s_cube
 	double			frame_time;
 
 	t_keys			*keys;
+
+	t_tex			**textures;
 }	t_cube;
 
 #endif

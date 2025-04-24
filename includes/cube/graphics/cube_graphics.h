@@ -4,9 +4,6 @@
 # define CEILING_COLOR 0xFF87CEEB
 # define FLOOR_COLOR 0x808080FF
 
-// # define CEILING_COLOR 0xFF000000
-// # define FLOOR_COLOR 0xFF000000
-
 # define WALL_COLOR_LIGHT 0x880000FF
 # define WALL_COLOR_DARK 0xFF8888FF
 
@@ -17,6 +14,11 @@
 # define TEXELS_COUNT (WINDOW_HEIGHT * WINDOW_WIDTH)
 # define TEXTURE_SIZE 512
 # define FLOOR_TEXTURE 4
+
+# define MINIMAP_SIZE 128
+# define MINIMAP_PLAYER_ICON_SIZE 8
+# define MINIMAP_ENEMY_ICON_SIZE 6
+# define MINIMAP_BORDER_WIDTH 16
 
 typedef struct	s_tex
 {
@@ -112,5 +114,7 @@ t_scene_setup	draw_prep_scene(t_cube *cube);
 void			close_cube(t_cube *cube);
 int				on_destroy(t_cube *cube);
 void			tex_load(const char **paths, t_cube *cube);
+void			display_minimap(t_cube *cube);
+void			draw_my_mlx_pixel_put(t_image_data *data, int x, int y, int color);
 
 #endif

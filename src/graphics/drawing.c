@@ -207,10 +207,10 @@ t_scene_setup draw_scene(t_cube *cube)
 	scene_setup = draw_prep_scene(cube);
 	draw_clear_screen(cube);
 	x = -1;
-	// TODO: Draw floor
 	draw_floor_and_ceiling(cube, &scene_setup);
 	while (++x < WINDOW_WIDTH)
 		draw_calculate_and_draw_single_stripe(x, &scene_setup, cube);
+	display_minimap(cube);
 	mlx_put_image_to_window(cube->mlx, cube->mlx_win, cube->mlx_img->img, 0, 0);
 	return (scene_setup);
 }

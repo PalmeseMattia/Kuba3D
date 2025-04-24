@@ -72,7 +72,7 @@ static void initialize_mlx(t_cube *cube)
     cube->mlx_img = malloc(sizeof(t_image_data));
     if (!cube->mlx_img)
     {
-        close_error(cube);
+		close_error(cube);
         return;
     }
     

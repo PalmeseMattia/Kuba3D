@@ -2,152 +2,101 @@
 #include <cube.h>
 #include <math.h>
 
-// Helper function to draw a filled rectangle
-static void draw_rectangle(t_image_data *img, 
-                          int x, int y, 
-                          int width, int height, 
-                          unsigned int color)
+static void	draw_minimap_rectangle(t_image_data *img, t_rect_data rect_data)
 {
-    int i, j;
-    
-    for (i = 0; i < height; i++)
-    {
-        for (j = 0; j < width; j++)
-        {
-            if (x + j >= 0 && x + j < WINDOW_WIDTH && 
-                y + i >= 0 && y + i < WINDOW_HEIGHT)
-            {
-                draw_my_mlx_pixel_put(img, x + j, y + i, color);
-            }
-        }
-    }
+    int	i;
+	int	j;
+	int offset_x;
+	int offset_y;
+
+	i = -1;
+	while (++i < rect_data.height)
+	{
+		j = -1;
+		while (++j < rect_data.width)
+		{
+			offset_x = rect_data.x + j;
+			offset_y = rect_data.y + i;
+			if (offset_x >= 0 && offset_x < WINDOW_WIDTH && 
+                offset_y >= 0 && offset_y < WINDOW_HEIGHT)
+                draw_my_mlx_pixel_put(img, offset_x, offset_y, rect_data.color);
+		}
+	}
 }
 
-// Helper function to draw a line (Bresenham's algorithm)
-static void draw_line(t_image_data *img, 
-                      int x0, int y0, 
-                      int x1, int y1, 
-                      unsigned int color)
+static t_bresenham_data draw_minimap_get_bresenham_data(t_minimap_draw_data draw_data)
 {
-    int dx = abs(x1 - x0);
-    int dy = -abs(y1 - y0);
-    int sx = x0 < x1 ? 1 : -1;
-    int sy = y0 < y1 ? 1 : -1;
-    int err = dx + dy;
-    int e2;
-    
-    while (1)
+	t_bresenham_data	bresenham_data;
+
+	bresenham_data.dx = abs(draw_data.x1 - draw_data.x0);
+    bresenham_data.dy = -abs(draw_data.y1 - draw_data.y0);
+	if (draw_data.x0 < draw_data.x1)
+		bresenham_data.sx = 1;
+	else
+		bresenham_data.sx = -1;
+	if (draw_data.y0 < draw_data.y1)
+		bresenham_data.sy = 1;
+	else
+		bresenham_data.sy = -1;
+    bresenham_data.err = bresenham_data.dx + bresenham_data.dy;
+	return (bresenham_data);
+}
+
+static void draw_minimap_line(t_image_data *img, t_minimap_draw_data draw_data)
+{
+    t_bresenham_data	bd;
+
+	bd = draw_minimap_get_bresenham_data(draw_data);
+    while (TRUE)
     {
-        if (x0 >= 0 && x0 < WINDOW_WIDTH && y0 >= 0 && y0 < WINDOW_HEIGHT)
-        {
-            draw_my_mlx_pixel_put(img, x0, y0, color);
-        }
-        
-        if (x0 == x1 && y0 == y1)
+        if (draw_data.x0 >= 0 && draw_data.x0 < WINDOW_WIDTH && draw_data.y0 >= 0 && draw_data.y0 < WINDOW_HEIGHT)
+            draw_my_mlx_pixel_put(img, draw_data.x0, draw_data.y0, draw_data.color);        
+        if (draw_data.x0 == draw_data.x1 && draw_data.y0 == draw_data.y1)
             break;
-            
-        e2 = 2 * err;
-        if (e2 >= dy)
+        bd.e2 = 2 * bd.err;
+        if (bd.e2 >= bd.dy)
         {
-            if (x0 == x1)
+            if (draw_data.x0 == draw_data.x1)
                 break;
-            err += dy;
-            x0 += sx;
+			bd.err += bd.dy;
+            draw_data.x0 += bd.sx;
         }
-        if (e2 <= dx)
+        if (bd.e2 <= bd.dx)
         {
-            if (y0 == y1)
+            if (draw_data.y0 == draw_data.y1)
                 break;
-            err += dx;
-            y0 += sy;
+			bd.err += bd.dx;
+            draw_data.y0 += bd.sy;
         }
     }
 }
 
-// Draw a circle using the midpoint circle algorithm
-// static void draw_circle(t_image_data *img, 
-//                        int center_x, int center_y, 
-//                        int radius, 
-//                        unsigned int color)
-// {
-//     int x = radius;
-//     int y = 0;
-//     int err = 0;
-
-//     while (x >= y)
-//     {
-//         if (center_x + x >= 0 && center_x + x < WINDOW_WIDTH && 
-//             center_y + y >= 0 && center_y + y < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x + x, center_y + y, color);
-        
-//         if (center_x + y >= 0 && center_x + y < WINDOW_WIDTH && 
-//             center_y + x >= 0 && center_y + x < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x + y, center_y + x, color);
-        
-//         if (center_x - y >= 0 && center_x - y < WINDOW_WIDTH && 
-//             center_y + x >= 0 && center_y + x < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x - y, center_y + x, color);
-        
-//         if (center_x - x >= 0 && center_x - x < WINDOW_WIDTH && 
-//             center_y + y >= 0 && center_y + y < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x - x, center_y + y, color);
-        
-//         if (center_x - x >= 0 && center_x - x < WINDOW_WIDTH && 
-//             center_y - y >= 0 && center_y - y < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x - x, center_y - y, color);
-        
-//         if (center_x - y >= 0 && center_x - y < WINDOW_WIDTH && 
-//             center_y - x >= 0 && center_y - x < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x - y, center_y - x, color);
-        
-//         if (center_x + y >= 0 && center_x + y < WINDOW_WIDTH && 
-//             center_y - x >= 0 && center_y - x < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x + y, center_y - x, color);
-        
-//         if (center_x + x >= 0 && center_x + x < WINDOW_WIDTH && 
-//             center_y - y >= 0 && center_y - y < WINDOW_HEIGHT)
-//             draw_my_mlx_pixel_put(img, center_x + x, center_y - y, color);
-        
-//         if (err <= 0)
-//         {
-//             y += 1;
-//             err += 2 * y + 1;
-//         }
-//         else
-//         {
-//             x -= 1;
-//             err -= 2 * x + 1;
-//         }
-//     }
-// }
-
-// Fill a circle
-static void fill_circle(t_image_data *img, 
-                       int center_x, int center_y, 
-                       int radius, 
-                       unsigned int color)
+static void draw_minimap_fill_circle(t_image_data *img, t_circle_data cd)
 {
-    int x, y;
-    for (y = -radius; y <= radius; y++)
-    {
-        for (x = -radius; x <= radius; x++)
-        {
-            if (x*x + y*y <= radius*radius)
+    int	x;
+	int	y;
+	int	draw_x;
+	int	draw_y;
+
+	y = -cd.radius - 1;
+	while (++y <= cd.radius)
+	{
+		x = -cd.radius - 1;
+		while (++x <= cd.radius)
+		{
+			if (x * x + y * y <= cd.radius * cd.radius)
             {
-                int draw_x = center_x + x;
-                int draw_y = center_y + y;
-                
+                draw_x = cd.center_x + x;
+                draw_y = cd.center_y + y;
                 if (draw_x >= 0 && draw_x < WINDOW_WIDTH && 
                     draw_y >= 0 && draw_y < WINDOW_HEIGHT)
-                {
-                    draw_my_mlx_pixel_put(img, draw_x, draw_y, color);
-                }
+                    draw_my_mlx_pixel_put(img, draw_x, draw_y, cd.color);
             }
-        }
-    }
+		}
+	}
 }
 
-void display_minimap(t_cube *cube)
+void	display_minimap(t_cube *cube)
 {
     // Configuration constants
     const int MINIMAP_X = 20;  // Top-left corner X position
@@ -180,21 +129,23 @@ void display_minimap(t_cube *cube)
     int start_y = center_y - MAP_DISPLAY_SIZE / 2;
     int end_x = start_x + MAP_DISPLAY_SIZE;
     int end_y = start_y + MAP_DISPLAY_SIZE;
+
+	t_rect_data	dd;
     
     // Draw background and border
-    draw_rectangle(cube->mlx_img, 
-                  MINIMAP_X - border_thickness, 
-                  MINIMAP_Y - border_thickness, 
-                  minimap_width + 2 * border_thickness, 
-                  minimap_height + 2 * border_thickness, 
-                  BORDER_COLOR);
-                  
-    draw_rectangle(cube->mlx_img, 
-                  MINIMAP_X, 
-                  MINIMAP_Y, 
-                  minimap_width, 
-                  minimap_height, 
-                  BACKGROUND_COLOR);
+	dd.x = MINIMAP_X - border_thickness;
+	dd.y = MINIMAP_Y - border_thickness;
+	dd.width = minimap_width + 2 * border_thickness;
+	dd.height = minimap_height + 2 * border_thickness;
+	dd.color = BORDER_COLOR;
+    draw_minimap_rectangle(cube->mlx_img, dd);
+	
+	dd.x = MINIMAP_X;
+	dd.y = MINIMAP_Y;
+	dd.width = minimap_width;
+	dd.height = minimap_height;
+	dd.color = BACKGROUND_COLOR;
+    draw_minimap_rectangle(cube->mlx_img, dd);
     
     // Draw map cells
     for (int y = start_y; y < end_y; y++)
@@ -219,13 +170,12 @@ void display_minimap(t_cube *cube)
             else
                 cell_color = FLOOR_COLOR;
             
-            // Draw cell with a small border to distinguish between cells
-            draw_rectangle(cube->mlx_img, 
-                          cell_x + 1, 
-                          cell_y + 1, 
-                          CELL_SIZE - 2, 
-                          CELL_SIZE - 2, 
-                          cell_color);
+            dd.x = cell_x + 1;
+            dd.y = cell_y + 1;
+			dd.width = CELL_SIZE - 2;
+			dd.height = CELL_SIZE - 2;
+			dd.color = cell_color;
+            draw_minimap_rectangle(cube->mlx_img, dd);
         }
     }
     
@@ -238,12 +188,23 @@ void display_minimap(t_cube *cube)
     
     // Draw player
     int player_radius = CELL_SIZE / 2;
-    fill_circle(cube->mlx_img, player_x, player_y, player_radius, PLAYER_COLOR);
+	t_circle_data	cd;
+	cd.center_x = player_x;
+	cd.center_y = player_y;
+	cd.radius = player_radius;
+	cd.color = PLAYER_COLOR;
+    draw_minimap_fill_circle(cube->mlx_img, cd);
     
     // Draw player direction
     int dir_length = CELL_SIZE * 1.5;
     int dir_x = player_x + (int)(cos(cube->player->angle) * dir_length);
     int dir_y = player_y + (int)(sin(cube->player->angle) * dir_length);
     
-    draw_line(cube->mlx_img, player_x, player_y, dir_x, dir_y, DIRECTION_COLOR);
+	t_minimap_draw_data	mdd;
+	mdd.x0 = player_x;
+	mdd.y0 = player_y;
+	mdd.x1 = dir_x;
+	mdd.y1 = dir_y;
+	mdd.color = DIRECTION_COLOR;
+    draw_minimap_line(cube->mlx_img, mdd);
 }

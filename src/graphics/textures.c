@@ -49,17 +49,7 @@ void tex_single_load(const char *path, t_tex *tex, t_cube *cube)
             tex->texels[dst_pos] = (r << 16) | (g << 8) | b;
         }
     }
-	// Log the texels values for debugging
-	ft_printf("Texels for texture %s:\n", path);
-	for (y = 0; y < TEXTURE_SIZE; y++)
-	{
-		for (x = 0; x < TEXTURE_SIZE; x++)
-		{
-			int pos = y * TEXTURE_SIZE + x;
-			ft_printf("%08X ", tex->texels[pos]);
-		}
-		ft_printf("\n");
-	}
+	
     // Free the temporary image data
     mlx_destroy_image(cube->mlx, img.img);
     ft_printf("Successfully loaded texture: %s\n", path);

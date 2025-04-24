@@ -25,6 +25,42 @@ typedef struct	s_tex
 	unsigned int	*texels;
 }	t_tex;
 
+typedef struct	s_minimap_draw_data
+{
+	int				x0;
+	int				y0;
+	int				x1;
+	int				y1;
+	unsigned int	color;
+}	t_minimap_draw_data;
+
+typedef struct	s_rect_data
+{
+	int				x;
+	int				y;
+	int				width;
+	int				height;
+	unsigned int	color;
+}	t_rect_data;
+
+typedef struct	s_circle_data
+{
+	int				center_x;
+	int				center_y;
+	int				radius;
+	unsigned int	color;
+}	t_circle_data;
+
+typedef struct	s_bresenham_data
+{
+	int	dx;
+    int	dy;
+    int	sx;
+    int	sy;
+    int	err;
+    int	e2;
+}	t_bresenham_data;
+
 typedef enum s_wall_face_hit
 {
 	WALL_FACE_NORTH,

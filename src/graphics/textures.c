@@ -1,4 +1,5 @@
 #include <cube_graphics.h>
+#include <cube_textures.h>
 #include <cube.h>
 #include <libft.h>
 

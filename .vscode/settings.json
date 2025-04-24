@@ -16,6 +16,7 @@
 		"math.h": "c",
 		"utils.h": "c",
 		"libft.h": "c",
-		"x.h": "c"
+		"x.h": "c",
+		"cube_minimap.h": "c"
 	}
 }

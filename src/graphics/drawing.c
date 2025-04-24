@@ -90,12 +90,13 @@ void draw_textured_vertical_slice(int column_x, t_dda *dda, t_cube *cube)
     y = -1;
     while (++y < WINDOW_HEIGHT)
     {
-        if (y < data.wall_top)
-            draw_my_mlx_pixel_put(cube->mlx_img, column_x, y, CEILING_COLOR);
-        else if (y >= data.wall_top && y <= data.wall_bottom)
+        // if (y < data.wall_top)
+        //     draw_my_mlx_pixel_put(cube->mlx_img, column_x, y, CEILING_COLOR);
+        // else
+		if (y >= data.wall_top && y <= data.wall_bottom)
             draw_textured(&data, cube, dda, y);
-        else
-            draw_my_mlx_pixel_put(cube->mlx_img, column_x, y, FLOOR_COLOR);
+        else if (y < data.wall_top)
+            draw_my_mlx_pixel_put(cube->mlx_img, column_x, y, CEILING_COLOR);
     }
 }
 
@@ -138,6 +139,66 @@ static void	draw_clear_screen(t_cube *cube)
 		&cube->mlx_img->endian);
 }
 
+static void	draw_floor_and_ceiling(t_cube *cube, t_scene_setup *scene)
+{
+	//FLOOR CASTING
+	for(int y = 0; y < WINDOW_HEIGHT; y++)
+	{
+		// rayDir for leftmost ray (x = 0) and rightmost ray (x = w)
+		float rayDirX0 = scene->dir_vect.dir_x - scene->camera_plane_x;
+		float rayDirY0 = scene->dir_vect.dir_y - scene->camera_plane_y;
+		float rayDirX1 = scene->dir_vect.dir_x + scene->camera_plane_x;
+		float rayDirY1 = scene->dir_vect.dir_y + scene->camera_plane_y;
+
+		// Current y position compared to the center of the screen (the horizon)
+		int p = y - WINDOW_HEIGHT / 2;
+
+		// Vertical position of the camera.
+		float posZ = 0.5 * WINDOW_HEIGHT;
+
+		// Horizontal distance from the camera to the floor for the current row.
+		// 0.5 is the z position exactly in the middle between floor and ceiling.
+		float rowDistance = posZ / p;
+
+		// calculate the real world step vector we have to add for each x (parallel to camera plane)
+		// adding step by step avoids multiplications with a weight in the inner loop
+		float floorStepX = rowDistance * (rayDirX1 - rayDirX0) / WINDOW_WIDTH;
+		float floorStepY = rowDistance * (rayDirY1 - rayDirY0) / WINDOW_WIDTH;
+
+		// real world coordinates of the leftmost column. This will be updated as we step to the right.
+		float floorX = scene->player_pos_x + rowDistance * rayDirX0;
+		float floorY = scene->player_pos_y + rowDistance * rayDirY0;
+
+		for(int x = 0; x < WINDOW_WIDTH; ++x)
+		{
+			// the cell coord is simply got from the integer parts of floorX and floorY
+			int cellX = (int)(floorX);
+			int cellY = (int)(floorY);
+
+			// get the texture coordinate from the fractional part
+			int tx = (int)(TEXTURE_SIZE * (floorX - cellX)) & (TEXTURE_SIZE - 1);
+			int ty = (int)(TEXTURE_SIZE * (floorY - cellY)) & (TEXTURE_SIZE - 1);
+
+			floorX += floorStepX;
+			floorY += floorStepY;
+
+			// choose texture and draw the pixel
+			unsigned int color;
+
+			// floor
+			color = cube->textures[FLOOR_TEXTURE]->texels[TEXTURE_SIZE * ty + tx];
+			color = (color >> 1) & 8355711; // make a bit darker
+			draw_my_mlx_pixel_put(cube->mlx_img, x, y, color);
+			
+			// ceiling (symmetrical, at screenHeight - y - 1 instead of y)
+			// color = cube->textures[ceilingTexture][texWidth * ty + tx];
+			// color = cube->textures[FLOOR_TEXTURE]->texels[TEXTURE_SIZE * ty + tx];
+			// color = (color >> 1) & 8355711; // make a bit darker
+			// draw_my_mlx_pixel_put(cube->mlx_img, x, WINDOW_HEIGHT - y - 1, color);
+		}
+	}
+}
+
 t_scene_setup draw_scene(t_cube *cube)
 {
 	t_scene_setup	scene_setup;
@@ -146,6 +207,8 @@ t_scene_setup draw_scene(t_cube *cube)
 	scene_setup = draw_prep_scene(cube);
 	draw_clear_screen(cube);
 	x = -1;
+	// TODO: Draw floor
+	draw_floor_and_ceiling(cube, &scene_setup);
 	while (++x < WINDOW_WIDTH)
 		draw_calculate_and_draw_single_stripe(x, &scene_setup, cube);
 	mlx_put_image_to_window(cube->mlx, cube->mlx_win, cube->mlx_img->img, 0, 0);

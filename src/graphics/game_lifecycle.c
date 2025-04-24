@@ -1,5 +1,6 @@
 #include <cube.h>
 #include <cube_graphics.h>
+#include <cube_textures.h>
 #include <libft.h>
 
 int		on_destroy(t_cube *cube)

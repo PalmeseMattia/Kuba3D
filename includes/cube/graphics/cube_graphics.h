@@ -10,11 +10,6 @@
 # define WINDOW_WIDTH 960
 # define WINDOW_HEIGHT 640
 
-# define TEXTURES_COUNT 5
-# define TEXELS_COUNT (WINDOW_HEIGHT * WINDOW_WIDTH)
-# define TEXTURE_SIZE 512
-# define FLOOR_TEXTURE 4
-
 typedef enum	s_drawing_type
 {
 	NONE,

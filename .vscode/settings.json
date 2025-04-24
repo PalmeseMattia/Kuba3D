@@ -17,6 +17,7 @@
 		"utils.h": "c",
 		"libft.h": "c",
 		"x.h": "c",
-		"cube_minimap.h": "c"
+		"cube_minimap.h": "c",
+		"cube_textures.h": "c"
 	}
 }

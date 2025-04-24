@@ -6,13 +6,14 @@
 /*   By: jnenczak <jnenczak@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:15:33 by jnenczak          #+#    #+#             */
-/*   Updated: 2025/04/24 16:57:55 by jnenczak         ###   ########.fr       */
+/*   Updated: 2025/04/24 22:07:55 by jnenczak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cube_mock.h>
 #include <stdlib.h>
 #include <cube_graphics.h>
+#include <cube_textures.h>
 
 t_color	load_mock_color( void )
 {

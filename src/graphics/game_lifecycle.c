@@ -1,5 +1,6 @@
 #include <cube.h>
 #include <cube_graphics.h>
+#include <cube_textures.h>
 #include <libft.h>
 
 int		on_destroy(t_cube *cube)
@@ -72,7 +73,7 @@ static void initialize_mlx(t_cube *cube)
     cube->mlx_img = malloc(sizeof(t_image_data));
     if (!cube->mlx_img)
     {
-        close_error(cube);
+		close_error(cube);
         return;
     }
     

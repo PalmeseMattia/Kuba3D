@@ -38,7 +38,7 @@ typedef struct	s_cube
 	void			*mlx;
 	void			*mlx_win;
 	t_image_data	*mlx_img;
-
+	
 	size_t			time;
 	size_t			old_time;
 	t_bool			running;

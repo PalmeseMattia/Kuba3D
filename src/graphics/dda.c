@@ -2,7 +2,7 @@
 #include <cube.h>
 #include <math.h>
 
-void	dda_set_wall_height(t_dda *dda)
+void	dda_set_wall_height(t_dda_data *dda)
 {
 	double perp_wall_dist;
 
@@ -13,7 +13,7 @@ void	dda_set_wall_height(t_dda *dda)
 	dda->wall_height = (int)(WINDOW_HEIGHT / perp_wall_dist);
 }
 
-void	dda_init(t_dda *dda, t_scene_setup *scene_setup, double camera_x)
+void	dda_init(t_dda_data *dda, t_draw_scene_data *scene_setup, double camera_x)
 {
 	dda->ray_dir_x = scene_setup->dir_vect.dir_x + scene_setup->camera_plane_x * camera_x;
 	dda->ray_dir_y = scene_setup->dir_vect.dir_y + scene_setup->camera_plane_y * camera_x;
@@ -31,7 +31,7 @@ void	dda_init(t_dda *dda, t_scene_setup *scene_setup, double camera_x)
 		dda->delta_dist_y = fabs(1 / dda->ray_dir_y);
 }
 
-void	dda_perform(t_dda *dda, t_cube *cube)
+void	dda_perform(t_dda_data *dda, t_cube *cube)
 {
 	int hit;
 
@@ -65,7 +65,7 @@ void	dda_perform(t_dda *dda, t_cube *cube)
 	}
 }
 
-void	dda_set_step_and_initial_side_dist(t_dda *dda)
+void	dda_set_step_and_initial_side_dist(t_dda_data *dda)
 {
 	if (dda->ray_dir_x < 0)
 	{

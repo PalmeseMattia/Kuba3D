@@ -6,13 +6,14 @@
 /*   By: jnenczak <jnenczak@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 14:15:33 by jnenczak          #+#    #+#             */
-/*   Updated: 2025/04/24 11:51:30 by jnenczak         ###   ########.fr       */
+/*   Updated: 2025/04/24 22:07:55 by jnenczak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cube_mock.h>
 #include <stdlib.h>
 #include <cube_graphics.h>
+#include <cube_textures.h>
 
 t_color	load_mock_color( void )
 {
@@ -115,11 +116,18 @@ int	is_within_map_bounds(t_point pt, t_map map)
 void	load_mock_textures(t_cube *cube)
 {
 	const char *paths[TEXTURES_COUNT] = {
-		"assets/textures/prototypes/wall_north.xpm",
-		"assets/textures/prototypes/wall_east.xpm",
-		"assets/textures/prototypes/wall_south.xpm",
-		"assets/textures/prototypes/wall_west.xpm",
-		"assets/textures/prototypes/floor.xpm",
+		"assets/textures/ai_gen/wall_north.xpm",
+		"assets/textures/ai_gen/wall_east.xpm",
+		"assets/textures/ai_gen/wall_south.xpm",
+		"assets/textures/ai_gen/wall_west.xpm",
+		"assets/textures/ai_gen/floor.xpm",
 	};
+	// const char *paths[TEXTURES_COUNT] = {
+	// 	"assets/textures/prototypes/wall_north.xpm",
+	// 	"assets/textures/prototypes/wall_east.xpm",
+	// 	"assets/textures/prototypes/wall_south.xpm",
+	// 	"assets/textures/prototypes/wall_west.xpm",
+	// 	"assets/textures/prototypes/floor.xpm",
+	// };
 	tex_load(paths, cube);
 }

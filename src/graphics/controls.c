@@ -8,7 +8,7 @@ static void handle_left_right(t_cube *cube, double move_speed)
 	double new_x;
 	double new_y;
 	t_point *pos;
-	t_vect mod_dir_vect;
+	t_dda_vector mod_dir_vect;
 
 	pos = &cube->player->location;
 	if (cube->keys->a)
@@ -37,7 +37,7 @@ static void handle_left_right(t_cube *cube, double move_speed)
 	}
 }
 
-static void handle_for_back(t_cube *cube, t_scene_setup scene, double move_speed)
+static void handle_for_back(t_cube *cube, t_draw_scene_data scene, double move_speed)
 {
 	double new_x;
 	double new_y;
@@ -78,7 +78,7 @@ void mov_handler(t_cube *cube)
 {
 	double m_speed;
 	double r_speed;
-	t_scene_setup scene;
+	t_draw_scene_data scene;
 
 	scene = draw_prep_scene(cube);
 	cube->frame_time = (cube->time - cube->old_time) / 1000.0;

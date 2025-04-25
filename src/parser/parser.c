@@ -1,7 +1,7 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../includes/libft/libft.h"
+#include "libft.h"
 
 enum e_cardinal {
 	NORTH,
@@ -41,7 +41,62 @@ t_settings	*new_settings()
 	return (settings);
 }
 
-void	parse_cardinal(char *line, t_texture *texture)
+int	ft_strisdigit(char *str)
+{
+	if (str == NULL)
+		return 0;
+	while (str != NULL && *str)
+	{
+		if (!ft_isdigit(*str))
+			return 0;
+		str++;
+	}
+	return 1;
+}
+
+void	parse_color(char *line, t_color *color)
+{
+	char	**splitted;
+	char	**color_components;
+	int		color_value;
+
+	splitted = ft_split(line, ' ');
+	if (ft_strarr_len(splitted) != 2)
+		printf("Error in line \"%s\".\n", line);
+	else
+	{
+		color_components = ft_split(splitted[1], ',');
+		if (ft_strarr_len(color_components) != 3)
+			printf("Not enough colors in line \"%s\".\n", line);
+		else
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				if (!ft_strisdigit(color_components[i]))
+				{
+					printf("Wrong color: \"%s\".\n", color_components[i]);
+					return;
+				}
+			}
+			for (int i = 0; i < 3; i++)
+			{
+				color_value = ft_atoi(color_components[i]);
+				if (color_value < 0 || color_value > 255)
+				{
+					printf("Error in line \"%s\":", line);
+					printf("Color values should be between 0 and 255\n");
+					return ;
+				}
+			}
+			color->red = ft_atoi(color_components[0]);
+			color->green = ft_atoi(color_components[1]);
+			color->blue = ft_atoi(color_components[2]);
+		}
+	}
+	//TODO: free splitted
+}
+
+void	parse_texture(char *line, t_texture *texture)
 {
 	char	**splitted;
 	int		size;
@@ -84,15 +139,17 @@ void parse_settings(char *file_path)
 		for (int i = 0; i < 4; i++) {
 			if ((ft_strncmp(line, cardinals[i], 2)) == 0)
 			{
-				parse_cardinal(line, &settings->textures[i]);
+				parse_texture(line, &settings->textures[i]);
 				break;
 			}
 		}
 		if (ft_strncmp(line, "F ", 2) == 0) {
 			printf("Found floor color\n");
+			parse_color(line, &settings->floor);
 		}
 		else if (ft_strncmp(line, "C ", 2) == 0) {
 			printf("Found Ceiling color\n");
+			parse_color(line, &settings->ceiling);
 		}
 	}
 }

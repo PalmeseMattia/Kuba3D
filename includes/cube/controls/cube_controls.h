@@ -22,6 +22,11 @@ typedef struct s_keys
     int	escape;
 }	t_keys;
 
+typedef struct s_input_handler
+{
+	t_keys	*keys;
+}	t_input_handler;
+
 int	con_key_release(int key_code, t_cube *cube);
 int	con_key_press(int key_code, t_cube *cube);
 

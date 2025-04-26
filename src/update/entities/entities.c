@@ -1,0 +1,127 @@
+#include <stdlib.h>
+#include <cube_entities.h>
+#include <cube_settings.h>
+
+t_keycard	*entities_keycard_init(t_point pt, size_t *tex)
+{
+	t_keycard	*keycard;
+
+	keycard = malloc(sizeof(t_keycard));
+	if (!keycard)
+		return (NULL);
+	keycard->is_picked_up = FALSE;
+	keycard->tex = tex;
+	keycard->x = pt.x;
+	keycard->y = pt.y;
+	return (keycard);
+}
+
+void	entities_keycard_free(t_keycard *keycard)
+{
+	if (!keycard)
+		return ;
+	free(keycard);
+}
+
+t_player	*entities_player_init(t_point pt)
+{
+	t_player	*player;
+
+	player = malloc(sizeof(t_player));
+	if (!player)
+		return (NULL);
+	player->hp = 100;
+	player->keycard = NULL;
+	player->x = pt.x;
+	player->y = pt.y;
+	return (player);
+}
+
+void	entities_player_free(t_player *player)
+{
+	if (!player)
+		return ;
+	free(player);
+}
+
+t_enemy	*entities_enemy_init(t_point pt, size_t	*tex)
+{
+	t_enemy	*enemy;
+
+	enemy = malloc(sizeof(t_enemy));
+	if (!enemy)
+		return (NULL);
+	enemy->hp = 100;
+	enemy->x = pt.x;
+	enemy->y = pt.y;
+	enemy->tex = tex;
+	return (enemy);
+}
+
+void	entities_enemy_free(t_enemy *enemy)
+{
+	if (!enemy)
+		return ;
+	free(enemy);
+}
+
+t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, size_t *tex)
+{
+	t_enemy	**enemies;
+	int		i;
+
+	i = -1;
+	while (enemy_locations[++i] != NULL)
+		;
+	enemies = malloc(sizeof(t_enemy *) * (i + 1));
+	if (!enemies)
+		return (NULL);
+	i = -1;
+	while (enemy_locations[++i] != NULL)
+		enemies[i] = entities_enemy_init(*enemy_locations[i], tex);
+	enemies[i] = NULL;
+	return (enemies);
+}
+
+void	entities_enemies_multiple_free(t_enemy **enemies)
+{
+	int	i;
+
+	i = -1;
+	while (enemies[++i] != NULL)
+		entities_enemy_free(enemies[i]);
+	free(enemies);
+	enemies = NULL;
+}
+
+t_entities	*entities_entities_init(t_entities_config config)
+{
+	t_entities	*entities;
+
+	entities = malloc(sizeof(t_entities));
+	if (!entities)
+		return (NULL);
+	entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_tex);
+	entities->keycard = entities_keycard_init(config.keycard_location, config.keycard_tex);
+	entities->player = entities_player_init(config.player_location);
+	return (entities);
+}
+
+void	entities_entities_free(t_entities *entities)
+{
+	entities_enemies_multiple_free(entities->enemies);
+	entities_player_free(entities->player);
+	entities_keycard_free(entities->keycard);
+}
+
+t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
+{
+	t_entities_config	entities_config;
+
+	entities_config.enemies_locations = cube_settings->map_config->enemies_locations;
+	entities_config.keycard_location = cube_settings->map_config->key_location;
+	entities_config.player_location = cube_settings->map_config->start_location;
+	entities_config.enemy_tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
+	entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
+	return (entities_config);
+}

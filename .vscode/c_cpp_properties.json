@@ -1,5 +1,22 @@
 {
     "env": {
+		"updatedIncludePath":
+		[
+			"${workspaceFolder}/lib/libft",
+            "${workspaceFolder}/lib/mlx_mac",
+            "${workspaceFolder}/lib/mlx_linux",
+			"${workspaceFolder}/includes",
+            "${workspaceFolder}/includes/cube/update/utils",
+            "${workspaceFolder}/includes/cube/update/mock",
+            "${workspaceFolder}/includes/cube/update/graphics",
+            "${workspaceFolder}/includes/cube/update/controls",
+            "${workspaceFolder}/includes/cube/update/entities",
+            "${workspaceFolder}/includes/cube/update/map",
+            "${workspaceFolder}/includes/cube/update/mlx_handler",
+            "${workspaceFolder}/includes/cube/update/settings",
+            "${workspaceFolder}/includes/cube/update/runtime_handler",
+			"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
+		],
         "myIncludePath": [
             "${workspaceFolder}/includes",
             "${workspaceFolder}/lib/libft",
@@ -10,6 +27,11 @@
             "${workspaceFolder}/includes/cube/utils",
             "${workspaceFolder}/includes/cube/graphics",
             "${workspaceFolder}/includes/cube/controls",
+            "${workspaceFolder}/includes/cube/entities",
+            "${workspaceFolder}/includes/cube/map",
+            "${workspaceFolder}/includes/cube/mlx_handler",
+            "${workspaceFolder}/includes/cube/settings",
+            "${workspaceFolder}/includes/cube/runtime_handler",
 			"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
         ],
         "myDefines": [
@@ -22,7 +44,8 @@
             "compilerPath": "/usr/bin/clang",
             "intelliSenseMode": "macos-clang-arm64",
             "includePath": [
-                "${myIncludePath}",
+                // "${myIncludePath}",
+                "${updatedIncludePath}",
                 "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
             ],
             "defines": [

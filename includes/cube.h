@@ -13,12 +13,6 @@
 # define WINDOW_TITLE "Cub3D"
 # define WINDOW_RESIZE FALSE
 
-typedef enum s_bool
-{
-	FALSE,
-	TRUE
-}	t_bool;
-
 typedef struct	s_image_data {
 	void	*img;
 	char	*addr;

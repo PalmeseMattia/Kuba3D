@@ -4,21 +4,36 @@
 #include <cube_input_handler.h>
 #include <cube_mlx_handler.h>
 #include <cube_runtime.h>
+#include <stdio.h>
 
-t_cube	*cube_cube_init(char **map, int width, int height, const char **tex_paths, t_mlx_handler *mlx_handler)
+t_cube	*cube_cube_init(char **map, int width, int height, const char **tex_paths)
 {
 	t_cube	*cube;
 
 	cube = malloc(sizeof(t_cube));
 	if (!cube)
 		return (NULL);
+	printf("1... Allocated memory for cube\n");
+
 	cube->mlx_handler = mlx_mlx_handler_init();
+	printf("2... Initialized mlx_handler\n");
+
 	cube->cube_settings = settings_cube_init(settings_map_config_init(map, width, height),
-		settings_tex_config_init(tex_paths, mlx_handler));
+		settings_tex_config_init(tex_paths, cube->mlx_handler));
+	printf("3... Initialized cube_settings\n");
+
 	cube->entities = entities_entities_init(entities_entities_config_init(cube->cube_settings));
+	printf("4... Initialized entities\n");
+
 	cube->input_handler = input_handler_init();
+	printf("5... Initialized input_handler\n");
+
 	cube->map = map_map_init(cube->cube_settings->map_config);
+	printf("6... Initialized map\n");
+
 	cube->runtime_handler = runtime_runtime_handler_init();
+	printf("7... Initialized runtime_handler\n");
+
 	return (cube);
 }
 

@@ -19,7 +19,7 @@ typedef struct	s_cube
 	t_input_handler		*input_handler;
 }	t_cube;
 
-t_cube	*cube_cube_init(char **map, int width, int height, const char **tex_paths, t_mlx_handler *mlx_handler);
+t_cube	*cube_cube_init(char **map, int width, int height, const char **tex_paths);
 void	cube_cube_free(t_cube *cube);
 
 #endif

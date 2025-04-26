@@ -28,13 +28,15 @@ typedef enum	s_tex_type
 	TEX_TYPE_EAST,
 	TEX_TYPE_SOUTH,
 	TEX_TYPE_WEST,
+	TEX_TYPE_FLOOR,
+	TEX_TYPE_CEILING,
+	TEX_TYPE_ENEMY,
 	TEX_TYPE_SPAWN,
 	TEX_TYPE_EXIT,
-	TEX_TYPE_KEYCARD,
-	TEX_TYPE_ENEMY
+	TEX_TYPE_KEYCARD
 }	t_tex_type;
 
-# define TEXTURE_TYPES_COUNT 8
+# define TEXTURE_TYPES_COUNT 7
 
 typedef struct	s_tex_config
 {

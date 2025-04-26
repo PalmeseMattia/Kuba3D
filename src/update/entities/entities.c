@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <cube_entities.h>
 #include <cube_settings.h>
+#include <stdio.h>
 
 t_keycard	*entities_keycard_init(t_point pt, size_t *tex)
 {
@@ -71,6 +72,8 @@ t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, size_t *tex
 	int		i;
 
 	i = -1;
+	if (!enemy_locations)
+		return (NULL);
 	while (enemy_locations[++i] != NULL)
 		;
 	enemies = malloc(sizeof(t_enemy *) * (i + 1));
@@ -98,12 +101,38 @@ t_entities	*entities_entities_init(t_entities_config config)
 {
 	t_entities	*entities;
 
+	printf("Allocating memory for entities...\n");
 	entities = malloc(sizeof(t_entities));
 	if (!entities)
+	{
+		printf("Failed to allocate memory for entities.\n");
 		return (NULL);
-	entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_tex);
+	}
+	printf("Initializing enemies...\n");
+	if (config.enemies_locations != NULL)
+		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_tex);
+	else
+		printf("No enemies found, skipping initialization...\n");
+	printf("Initializing keycard...\n");
 	entities->keycard = entities_keycard_init(config.keycard_location, config.keycard_tex);
+	if (!entities->keycard)
+	{
+		printf("Failed to initialize keycard.\n");
+		entities_enemies_multiple_free(entities->enemies);
+		free(entities);
+		return (NULL);
+	}
+	printf("Initializing player...\n");
 	entities->player = entities_player_init(config.player_location);
+	if (!entities->player)
+	{
+		printf("Failed to initialize player.\n");
+		entities_keycard_free(entities->keycard);
+		entities_enemies_multiple_free(entities->enemies);
+		free(entities);
+		return (NULL);
+	}
+	printf("Entities initialized successfully.\n");
 	return (entities);
 }
 
@@ -118,10 +147,22 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 {
 	t_entities_config	entities_config;
 
+	printf("Initializing entities configuration...\n");
+	printf("Setting enemies locations...\n");
 	entities_config.enemies_locations = cube_settings->map_config->enemies_locations;
-	entities_config.keycard_location = cube_settings->map_config->key_location;
+
+	// printf("Setting keycard location...\n");
+	// entities_config.keycard_location = cube_settings->map_config->key_location;
+
+	printf("Setting player start location...\n");
 	entities_config.player_location = cube_settings->map_config->start_location;
+
+	printf("Setting enemy texture...\n");
 	entities_config.enemy_tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
-	entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
+
+	// printf("Setting keycard texture...\n");
+	// entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
+
+	printf("Entities configuration initialized successfully.\n");
 	return (entities_config);
 }

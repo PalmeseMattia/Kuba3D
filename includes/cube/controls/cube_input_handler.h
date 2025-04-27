@@ -27,10 +27,10 @@ typedef struct s_input_handler
 
 typedef struct s_cube	t_cube;
 
-// int	con_key_release(int key_code, t_cube *cube);
-// int	con_key_press(int key_code, t_cube *cube);
-
 t_input_handler	*input_handler_init( void );
 void			input_handler_free(t_input_handler *input_handler);
+int				input_handler_key_release(int key_code, t_cube *cube);
+int				input_handler_key_press(int key_code, t_cube *cube);
+void			mov_handler(t_cube *cube);
 
 #endif

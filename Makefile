@@ -1,7 +1,7 @@
 NAME := Cube
 CFLAGS := -Wextra -Wall -Werror -O0 -g
 LIBLIBFT := ./lib/libft
-HEADERS := -I ./includes/ -I $(LIBLIBFT) -I ./includes/cube/update/mock/ -I ./includes/cube/update/parsing/ -I ./includes/cube/update/utils/ -I ./includes/cube/update/controls/ -I ./includes/cube/update/entities/ -I ./includes/cube/update/map/ -I ./includes/cube/update/mlx_handler/ -I ./includes/cube/update/runtime_handler/ -I ./includes/cube/update/runtime_handler/ -I ./includes/cube/update/settings/
+HEADERS := -I ./includes/ -I $(LIBLIBFT) -I ./includes/cube/mock/ -I ./includes/cube/parsing/ -I ./includes/cube/utils/ -I ./includes/cube/controls/ -I ./includes/cube/entities/ -I ./includes/cube/map/ -I ./includes/cube/mlx_handler/ -I ./includes/cube/runtime_handler/ -I ./includes/cube/runtime_handler/ -I ./includes/cube/settings/ -I ./includes/cube/dda/ -I ./includes/cube/drawing/ -I ./includes/cube/lifecycle/
 
 # OS detection
 UNAME_S := $(shell uname -s)
@@ -30,7 +30,7 @@ ifeq ($(UNAME_S),Darwin)
     X11_FLAGS = -L/usr/X11/lib -lXext -lX11
 endif
 
-SRCS := $(shell find ./src/update -iname "*.c")
+SRCS := $(shell find ./src/ -iname "*.c")
 OBJS := ${SRCS:.c=.o}
 
 all: liblibft libmlx $(NAME)

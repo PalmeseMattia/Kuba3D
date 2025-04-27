@@ -27,6 +27,8 @@
 		"cube_settings_textures.h": "c",
 		"cube_input_handler.h": "c",
 		"cube_runtime.h": "c",
-		"new_cube.h": "c"
+		"cube_dda.h": "c",
+		"cube_lifecycle.h": "c",
+		"mlx_int.h": "c"
 	}
 }

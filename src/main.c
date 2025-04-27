@@ -54,8 +54,8 @@ int	main( void )
 	cube = cube_cube_init((char **)map, MAP_SIZE, MAP_SIZE, paths);
 	mlx_hook(cube->mlx_handler->mlx_win, 2, 1L << 0, input_handler_key_press, cube);
 	mlx_hook(cube->mlx_handler->mlx_win, 3, 1L << 1, input_handler_key_release, cube);
-	// mlx_hook(cube->mlx_handler->mlx_win, DestroyNotify,
-	// 	StructureNotifyMask, &on_destroy, &cube);
+	mlx_hook(cube->mlx_handler->mlx_win, DestroyNotify,
+		StructureNotifyMask, &on_destroy, &cube);
 	mlx_loop_hook(cube->mlx_handler->mlx, game_loop_hook, cube);
 	mlx_loop(cube->mlx_handler->mlx);
 	return (EXIT_SUCCESS);

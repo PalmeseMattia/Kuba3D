@@ -53,5 +53,6 @@ void	cube_cube_free(t_cube *cube)
 	mlx_mlx_handler_free(cube->mlx_handler);
 	runtime_runtime_handler_free(cube->runtime_handler);
 	dda_free(cube->dda_data);
+	safe_free(cube);
 	exit(EXIT_SUCCESS);
 }

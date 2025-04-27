@@ -7,6 +7,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+int		on_destroy(t_cube *cube)
+{
+	input_handler_key_press(KEY_ESC, cube);
+	return (0);
+}
+
 static double framerate_get_ticks()
 {
     struct timeval	tv;

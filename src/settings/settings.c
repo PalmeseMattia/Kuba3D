@@ -21,5 +21,7 @@ void	settings_cube_free(t_cube_settings *cube_settings)
 {
 	if (!cube_settings)
 		return ;
-	
+	settings_map_config_free(cube_settings->map_config);
+	settings_tex_config_free(cube_settings->tex_config);
+	safe_free(cube_settings);
 }

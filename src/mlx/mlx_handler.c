@@ -44,5 +44,6 @@ void	mlx_mlx_handler_free(t_mlx_handler *mlx_handler)
 	mlx_img_image_data_free(mlx_handler, mlx_handler->mlx_img);
 	mlx_destroy_window(mlx_handler->mlx, mlx_handler->mlx_win);
 	mlx_destroy_display(mlx_handler->mlx);
+	safe_free(mlx_handler->mlx);
 	safe_free(mlx_handler);
 }

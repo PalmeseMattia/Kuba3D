@@ -10,7 +10,7 @@ t_tex_config	*settings_tex_config_init(const char **paths, t_mlx_handler *mlx_ha
 {
 	t_tex_config	*tex_config;
 
-	tex_config = malloc(sizeof(tex_config));
+	tex_config = malloc(sizeof(t_tex_config));
 	if (!tex_config)
 		return (NULL);
 	tex_config->textures = malloc(sizeof(size_t *) * (TEXTURE_TYPES_COUNT));
@@ -21,21 +21,6 @@ t_tex_config	*settings_tex_config_init(const char **paths, t_mlx_handler *mlx_ha
 	}
 	settings_tex_config_set_tex_all(tex_config, mlx_handler, paths);
 	return (tex_config);
-}
-
-void	settings_tex_config_free(t_tex_config *tex_config)
-{
-	int	i;
-
-	if (!tex_config)
-	{
-		safe_free(tex_config);
-		return ;
-	}
-	i = -1;
-	while (++i < TEXTURE_TYPES_COUNT)
-		safe_free(tex_config->textures[i]);
-	safe_free(tex_config);
 }
 
 static t_image_data *settings_tex_get_image(const char *path, t_mlx_handler *mlx_handler)
@@ -73,15 +58,16 @@ static size_t	*settings_tex_get_texels(const char *path, t_mlx_handler *mlx_hand
 	
 
 	img = settings_tex_get_image(path, mlx_handler);
-	if (!img)
-		return (NULL);
-	texels = malloc(sizeof(size_t) * (TEXTURE_SIZE * TEXTURE_SIZE));
-	if (!texels)
-	{
-		mlx_destroy_image(mlx_handler->mlx, img);
-		free(img);
-		return (NULL);
-	}
+    if (!img)
+        return (NULL);
+    texels = malloc(sizeof(size_t) * (TEXTURE_SIZE * TEXTURE_SIZE));
+    if (!texels)
+    {
+        mlx_destroy_image(mlx_handler->mlx, img);
+        free(img);
+        return (NULL);
+    }
+
 	tex_data.img = img;
 	y = -1;
 	while (++y < TEXTURE_SIZE)
@@ -154,4 +140,21 @@ void	settings_tex_config_set_tex_all(t_tex_config *config, t_mlx_handler *mlx_ha
 		settings_tex_config_set_tex(config, 
 			settings_tex_get_tex_type((char *)paths[i]), mlx_handler, (char *)paths[i]);
 	}
+}
+
+void settings_tex_config_free(t_tex_config *tex_config)
+{
+    int i;
+
+    if (!tex_config)
+        return;
+    
+    if (tex_config->textures)
+    {
+        i = -1;
+        while (++i < TEXTURE_TYPES_COUNT)
+            safe_free(tex_config->textures[i]);
+        safe_free(tex_config->textures);
+    }
+    safe_free(tex_config);
 }

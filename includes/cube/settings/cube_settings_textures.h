@@ -48,5 +48,6 @@ typedef struct s_mlx_handler	t_mlx_handler;
 t_tex_config	*settings_tex_config_init(const char **paths, t_mlx_handler *mlx_handler);
 void			settings_tex_config_set_tex_all(t_tex_config *config, 
 	t_mlx_handler *mlx_handler, const char **paths);
+void			settings_tex_config_free(t_tex_config *tex_config);
 
 #endif

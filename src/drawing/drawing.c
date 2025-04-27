@@ -136,15 +136,17 @@ void	draw_calculate_and_draw_single_stripe(int x, t_cube *cube)
     draw_textured_vertical_slice(x, cube);
 }
 
-static void	draw_clear_screen(t_cube *cube)
+static void draw_clear_screen(t_cube *cube)
 {
-	if (cube->mlx_handler->mlx_img->img != NULL)
-		mlx_destroy_image(cube->mlx_handler->mlx, cube->mlx_handler->mlx_img->img);
-	cube->mlx_handler->mlx_img->img = mlx_new_image(cube->mlx_handler->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
-	cube->mlx_handler->mlx_img->addr = mlx_get_data_addr(cube->mlx_handler->mlx_img->img, 
-		&cube->mlx_handler->mlx_img->bits_per_pixel, 
-		&cube->mlx_handler->mlx_img->line_length,
-		&cube->mlx_handler->mlx_img->endian);
+    if (cube->mlx_handler->mlx_img->img != NULL) {
+        mlx_destroy_image(cube->mlx_handler->mlx, cube->mlx_handler->mlx_img->img);
+    }
+    
+    cube->mlx_handler->mlx_img->img = mlx_new_image(cube->mlx_handler->mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
+    cube->mlx_handler->mlx_img->addr = mlx_get_data_addr(cube->mlx_handler->mlx_img->img, 
+        &cube->mlx_handler->mlx_img->bits_per_pixel, 
+        &cube->mlx_handler->mlx_img->line_length,
+        &cube->mlx_handler->mlx_img->endian);
 }
 
 static t_draw_horizontal_data	draw_get_draw_horizontal_data(t_cube *cube, int y)

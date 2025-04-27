@@ -29,49 +29,49 @@ void	entities_keycard_free(t_keycard *keycard)
 
 t_player *entities_player_init(t_point pt)
 {
-    t_player *player;
+	t_player *player;
 
-    player = malloc(sizeof(t_player));
-    if (!player)
-        return (NULL);
-    player->hp = 100;
-    player->keycard = NULL;
-    player->x = pt.x;
-    player->y = pt.y;
+	player = malloc(sizeof(t_player));
+	if (!player)
+		return (NULL);
+	player->hp = 100;
+	player->keycard = NULL;
+	player->x = pt.x;
+	player->y = pt.y;
 
-    // Initialize direction based on starting character
-    if (pt.c == 'N')
-    {
-        player->dir.dir_x = 0;
-        player->dir.dir_y = -1;
-    }
-    else if (pt.c == 'S')
-    {
-        player->dir.dir_x = 0;
-        player->dir.dir_y = 1;
-    }
-    else if (pt.c == 'E')
-    {
-        player->dir.dir_x = 1;
-        player->dir.dir_y = 0;
-    }
-    else if (pt.c == 'W')
-    {
-        player->dir.dir_x = -1;
-        player->dir.dir_y = 0;
-    }
-    else
-    {
-        // Default to East if not specified
-        player->dir.dir_x = 1;
-        player->dir.dir_y = 0;
-    }
-    
-    // Initialize camera plane perpendicular to direction
-    player->camera.dir_x = player->dir.dir_y * FOV;
-    player->camera.dir_y = -player->dir.dir_x * FOV;
-    
-    return (player);
+	// Initialize direction based on starting character
+	if (pt.c == 'N')
+	{
+		player->dir.dir_x = 0;
+		player->dir.dir_y = -1;
+	}
+	else if (pt.c == 'S')
+	{
+		player->dir.dir_x = 0;
+		player->dir.dir_y = 1;
+	}
+	else if (pt.c == 'E')
+	{
+		player->dir.dir_x = 1;
+		player->dir.dir_y = 0;
+	}
+	else if (pt.c == 'W')
+	{
+		player->dir.dir_x = -1;
+		player->dir.dir_y = 0;
+	}
+	else
+	{
+		// Default to East if not specified
+		player->dir.dir_x = 1;
+		player->dir.dir_y = 0;
+	}
+	
+	// Initialize camera plane perpendicular to direction
+	player->camera.dir_x = player->dir.dir_y * FOV;
+	player->camera.dir_y = -player->dir.dir_x * FOV;
+	
+	return (player);
 }
 
 void	entities_player_free(t_player *player)
@@ -122,22 +122,25 @@ t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, size_t *tex
 	return (enemies);
 }
 
-void	entities_enemies_multiple_free(t_enemy **enemies)
+void entities_enemies_multiple_free(t_enemy **enemies)
 {
-	int	i;
+	int i;
 
 	if (!enemies)
-		return ;
+		return;
+	
 	i = -1;
+	// Loop through enemies until NULL is found
 	while (enemies[++i] != NULL)
 		entities_enemy_free(enemies[i]);
-	free(enemies);
+	
+	safe_free(enemies);
 	enemies = NULL;
 }
 
 t_entities	*entities_entities_init(t_entities_config config)
 {
-	t_entities	*entities;
+	t_entities *entities;
 
 	printf("Allocating memory for entities...\n");
 	entities = malloc(sizeof(t_entities));
@@ -146,11 +149,16 @@ t_entities	*entities_entities_init(t_entities_config config)
 		printf("Failed to allocate memory for entities.\n");
 		return (NULL);
 	}
+	
 	printf("Initializing enemies...\n");
+	// Initialize enemies pointer to NULL by default
+	entities->enemies = NULL;
+	
 	if (config.enemies_locations != NULL)
 		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_tex);
 	else
 		printf("No enemies found, skipping initialization...\n");
+
 	printf("Initializing keycard...\n");
 	entities->keycard = entities_keycard_init(config.keycard_location, config.keycard_tex);
 	// if (!entities->keycard)
@@ -174,11 +182,17 @@ t_entities	*entities_entities_init(t_entities_config config)
 	return (entities);
 }
 
-void	entities_entities_free(t_entities *entities)
+void entities_entities_free(t_entities *entities)
 {
-	entities_enemies_multiple_free(entities->enemies);
-	entities_player_free(entities->player);
-	entities_keycard_free(entities->keycard);
+	if (!entities)
+		return;
+	if (entities->enemies)
+		entities_enemies_multiple_free(entities->enemies);
+	if (entities->player)
+		entities_player_free(entities->player);
+	if (entities->keycard)
+		entities_keycard_free(entities->keycard);
+	safe_free(entities);
 }
 
 t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
@@ -196,10 +210,16 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 	entities_config.player_location = cube_settings->map_config->start_location;
 
 	printf("Setting enemy texture...\n");
-	entities_config.enemy_tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
+	if (TEX_TYPE_ENEMY < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_ENEMY])
+		entities_config.enemy_tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
+	else
+		entities_config.enemy_tex = NULL;
 
 	printf("Setting keycard texture...\n");
-	entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
+	if (TEX_TYPE_KEYCARD < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_KEYCARD])
+		entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
+	else
+		entities_config.keycard_tex = NULL;
 
 	printf("Entities configuration initialized successfully.\n");
 	return (entities_config);

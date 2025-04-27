@@ -15,5 +15,6 @@ typedef struct	s_map_config
 }	t_map_config;
 
 t_map_config	*settings_map_config_init(char **map, int width, int height);
+void			settings_map_config_free(t_map_config *map_config);
 
 #endif

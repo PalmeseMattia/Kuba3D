@@ -158,3 +158,19 @@ t_map_config	*settings_map_config_init(char **map, int width, int height)
 	printf("Initialization complete. Returning map_config.\n");
 	return (map_config);
 }
+
+void settings_map_config_free(t_map_config *map_config)
+{
+    int i;
+
+    if (!map_config)
+        return;
+    if (map_config->enemies_locations)
+    {
+        i = -1;
+        while (map_config->enemies_locations[++i])
+            safe_free(map_config->enemies_locations[i]);
+        safe_free(map_config->enemies_locations);
+    }
+    safe_free(map_config);
+}

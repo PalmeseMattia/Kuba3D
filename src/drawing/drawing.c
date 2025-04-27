@@ -7,6 +7,7 @@
 #include <mlx.h>
 #include <math.h>
 #include <stdio.h>
+#include <cube_minimap.h>
 
 void	draw_my_mlx_pixel_put(t_image_data *data, int x, int y, int color)
 {
@@ -252,7 +253,7 @@ void draw_scene(t_cube *cube)
     x = -1;
     while (++x < WINDOW_WIDTH)
         draw_calculate_and_draw_single_stripe(x, cube);
-    
+    draw_minimap(cube);
     mlx_put_image_to_window(cube->mlx_handler->mlx, cube->mlx_handler->mlx_win, 
                            cube->mlx_handler->mlx_img->img, 0, 0);
 }

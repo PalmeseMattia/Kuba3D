@@ -36,8 +36,8 @@ t_player *entities_player_init(t_point pt)
 		return (NULL);
 	player->hp = 100;
 	player->keycard = NULL;
-	player->x = pt.x;
-	player->y = pt.y;
+	player->x = pt.x + .5;
+	player->y = pt.y + .5;
 
 	// Initialize direction based on starting character
 	if (pt.c == 'N')
@@ -89,8 +89,8 @@ t_enemy	*entities_enemy_init(t_point pt, size_t	*tex)
 	if (!enemy)
 		return (NULL);
 	enemy->hp = 100;
-	enemy->x = pt.x;
-	enemy->y = pt.y;
+	enemy->x = pt.x + .5;
+	enemy->y = pt.y + .5;
 	enemy->tex = tex;
 	return (enemy);
 }

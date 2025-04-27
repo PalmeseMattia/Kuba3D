@@ -39,14 +39,22 @@ static int count_enemies(t_enemy **enemies)
     return count;
 }
 
+// Getting the distance^2, but it doesn't matter in this case
+static double	sprite_enemy_get_distance(t_enemy *enemy, t_player *player)
+{
+	return ((player->x - enemy->x) * (player->x - enemy->x) + 
+                             (player->y - enemy->y) * (player->y - enemy->y));
+}
+
 void sprites_draw(t_cube *cube)
 {
-    t_entities *entities;
-    t_player *player;
-    int num_sprites;
-    int *sprite_order;
-    double *sprite_distance;
-    t_enemy **enemies;
+    t_entities	*entities;
+    t_player	*player;
+    t_enemy		**enemies;
+
+    int			num_sprites;
+    int			*sprite_order;
+    double		*sprite_distance;
     
     // Get entities and player pointers
     entities = cube->entities;
@@ -56,22 +64,16 @@ void sprites_draw(t_cube *cube)
     // Count sprites (enemies)
     num_sprites = count_enemies(enemies);
     if (num_sprites == 0)
-        return; // No sprites to draw
+        return ;
     
     // Allocate memory for sprite orders and distances
-    sprite_order = malloc(sizeof(int) * num_sprites);
-    sprite_distance = malloc(sizeof(double) * num_sprites);
-    if (!sprite_order || !sprite_distance) {
-        safe_free(sprite_order);
-        safe_free(sprite_distance);
-        return;
-    }
+    sprite_distance = &cube->entities->sprite_distance;
+    sprite_order = &cube->entities->sprite_order;
     
     // Calculate distances for each sprite
     for (int i = 0; i < num_sprites; i++) {
         sprite_order[i] = i;
-        sprite_distance[i] = ((player->x - enemies[i]->x) * (player->x - enemies[i]->x) + 
-                             (player->y - enemies[i]->y) * (player->y - enemies[i]->y));
+        sprite_distance[i] = sprite_enemy_get_distance(enemies[i], player);
     }
     
     // Sort sprites based on distance (furthest first)
@@ -143,8 +145,4 @@ void sprites_draw(t_cube *cube)
             }
         }
     }
-    
-    // Free allocated memory
-    free(sprite_order);
-    free(sprite_distance);
 }

@@ -133,7 +133,8 @@ void	draw_calculate_and_draw_single_stripe(int x, t_cube *cube)
         dda->perp_wall_dist = (dda->side_dist_x - dda->delta_dist_x);
     else
         dda->perp_wall_dist = (dda->side_dist_y - dda->delta_dist_y);
-    dda_set_wall_height(cube);
+	dda->wall_height = (int)(WINDOW_HEIGHT / dda->perp_wall_dist);
+	cube->entities->buffer_z[x] = dda->perp_wall_dist;
     draw_textured_vertical_slice(x, cube);
 }
 
@@ -253,6 +254,7 @@ void draw_scene(t_cube *cube)
     x = -1;
     while (++x < WINDOW_WIDTH)
         draw_calculate_and_draw_single_stripe(x, cube);
+	sprites_draw(cube);
     draw_minimap(cube);
     mlx_put_image_to_window(cube->mlx_handler->mlx, cube->mlx_handler->mlx_win, 
                            cube->mlx_handler->mlx_img->img, 0, 0);

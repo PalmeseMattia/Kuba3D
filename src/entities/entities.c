@@ -202,6 +202,7 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 	printf("Initializing entities configuration...\n");
 	printf("Setting enemies locations...\n");
 	entities_config.enemies_locations = cube_settings->map_config->enemies_locations;
+	entities_config.enemies_count = cube_settings->map_config->enemies_count;
 
 	printf("Setting keycard location...\n");
 	entities_config.keycard_location = cube_settings->map_config->key_location;

@@ -54,6 +54,5 @@ t_dda_data	*dda_init();
 void		dda_setup(t_cube *cube, double camera_x);
 void		dda_set_step_and_initial_side_dist(t_cube *cube);
 void		dda_perform(t_cube *cube);
-void		dda_set_wall_height(t_cube *cube);
 
 #endif

@@ -140,6 +140,7 @@ t_map_config	*settings_map_config_init(char **map, int width, int height)
 
 	printf("Getting enemies locations...\n");
 	map_config->enemies_locations = settings_map_config_get_enemies_locations(map, width, height);
+	map_config->enemies_count = settings_map_config_count_enemies(map, width, height);
 	printf("Enemies locations retrieved.\n");
 
 	printf("Setting map dimensions...\n");

@@ -1,8 +1,12 @@
 #ifndef UTILS_H
 # define UTILS_H
 
-# include <parsing.h>
+typedef enum s_bool
+{
+	FALSE,
+	TRUE
+}	t_bool;
 
-void	print_map(t_map map);
+void	safe_free(void *param);
 
 #endif

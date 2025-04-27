@@ -18,6 +18,17 @@
 		"libft.h": "c",
 		"x.h": "c",
 		"cube_minimap.h": "c",
-		"cube_textures.h": "c"
+		"cube_textures.h": "c",
+		"cube_entities.h": "c",
+		"cube_map.h": "c",
+		"cube_mlx_handler.h": "c",
+		"cube_settings.h": "c",
+		"cube_settings_map.h": "c",
+		"cube_settings_textures.h": "c",
+		"cube_input_handler.h": "c",
+		"cube_runtime.h": "c",
+		"cube_dda.h": "c",
+		"cube_lifecycle.h": "c",
+		"mlx_int.h": "c"
 	}
 }

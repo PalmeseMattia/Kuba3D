@@ -1,17 +1,24 @@
 {
     "env": {
-        "myIncludePath": [
-            "${workspaceFolder}/includes",
-            "${workspaceFolder}/lib/libft",
+		"myIncludePath":
+		[
+			"${workspaceFolder}/lib/libft",
             "${workspaceFolder}/lib/mlx_mac",
             "${workspaceFolder}/lib/mlx_linux",
-            "${workspaceFolder}/includes/cube/mock",
-            "${workspaceFolder}/includes/cube/parsing",
+			"${workspaceFolder}/includes",
             "${workspaceFolder}/includes/cube/utils",
-            "${workspaceFolder}/includes/cube/graphics",
+            "${workspaceFolder}/includes/cube/mock",
             "${workspaceFolder}/includes/cube/controls",
+            "${workspaceFolder}/includes/cube/entities",
+            "${workspaceFolder}/includes/cube/map",
+            "${workspaceFolder}/includes/cube/mlx_handler",
+            "${workspaceFolder}/includes/cube/dda",
+            "${workspaceFolder}/includes/cube/settings",
+            "${workspaceFolder}/includes/cube/drawing",
+            "${workspaceFolder}/includes/cube/runtime_handler",
+            "${workspaceFolder}/includes/cube/lifecycle",
 			"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
-        ],
+		],
         "myDefines": [
             "DEBUG=1"
         ]

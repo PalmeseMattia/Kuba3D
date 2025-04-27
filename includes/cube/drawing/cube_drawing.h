@@ -46,7 +46,9 @@ typedef struct	s_draw_vertical_slice_data
 }	t_draw_vertical_slice_data;
 
 typedef struct	s_cube	t_cube;
+typedef struct	s_image_data	t_image_data;
 
 void	draw_scene(t_cube *cube);
+void	draw_my_mlx_pixel_put(t_image_data *data, int x, int y, int color);
 
 #endif

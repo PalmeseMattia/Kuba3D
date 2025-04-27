@@ -31,7 +31,6 @@ int game_loop_hook(t_cube *cube)
 	}
 	cube->runtime_handler->old_time = cube->runtime_handler->time;
 	cube->runtime_handler->time = framerate_get_ticks();
-	printf("Loop at: %ld\n", cube->runtime_handler->time);
 	draw_scene(cube);
 	mov_handler(cube);
 	return (0);

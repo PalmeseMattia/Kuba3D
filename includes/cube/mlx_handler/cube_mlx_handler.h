@@ -1,8 +1,9 @@
 #ifndef CUBE_MLX_HANDLER_H
 # define CUBE_MLX_HANDLER_H
 
-# define WINDOW_WIDTH 960
-# define WINDOW_HEIGHT 640
+# define WINDOW_WIDTH 1600
+# define WINDOW_HEIGHT 900
+
 # define FOV .66
 
 typedef struct	s_image_data

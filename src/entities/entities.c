@@ -2,6 +2,7 @@
 #include <cube_entities.h>
 #include <cube_settings.h>
 #include <cube_mlx_handler.h>
+#include <cube_animations.h>
 #include <stdio.h>
 
 t_keycard	*entities_keycard_init(t_point pt, size_t *tex)
@@ -91,7 +92,8 @@ t_enemy	*entities_enemy_init(t_point pt, size_t	*tex)
 	enemy->hp = 100;
 	enemy->x = pt.x + .5;
 	enemy->y = pt.y + .5;
-	enemy->tex = tex;
+	enemy->animation_controller = anim_animation_controller_init();
+	anim_animation_controller_set_animation(enemy->animation_controller, ANIM_TYPE_IDLE, tex); // TODO: Change to idle_tex, attack_tex, ...
 	return (enemy);
 }
 
@@ -155,7 +157,7 @@ t_entities	*entities_entities_init(t_entities_config config)
 	entities->enemies = NULL;
 	
 	if (config.enemies_locations != NULL)
-		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_tex);
+		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.tex);
 	else
 		printf("No enemies found, skipping initialization...\n");
 
@@ -212,9 +214,9 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 
 	printf("Setting enemy texture...\n");
 	if (TEX_TYPE_ENEMY < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_ENEMY])
-		entities_config.enemy_tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
+		entities_config.tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
 	else
-		entities_config.enemy_tex = NULL;
+		entities_config.tex = NULL;
 
 	printf("Setting keycard texture...\n");
 	if (TEX_TYPE_KEYCARD < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_KEYCARD])

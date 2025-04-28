@@ -17,6 +17,7 @@
             "${workspaceFolder}/includes/cube/drawing",
             "${workspaceFolder}/includes/cube/runtime_handler",
             "${workspaceFolder}/includes/cube/lifecycle",
+            "${workspaceFolder}/includes/cube/animations",
 			"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
 		],
         "myDefines": [

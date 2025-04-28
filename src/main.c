@@ -38,13 +38,13 @@ char *map[] = {
 };
 
 const char *paths[] = {
-	"NO ./assets/textures/biohazard/xpm/wall_north.xpm",
-	"SO ./assets/textures/biohazard/xpm/wall_south.xpm",
-	"EA ./assets/textures/biohazard/xpm/wall_east.xpm",
-	"WE ./assets/textures/biohazard/xpm/wall_west.xpm",
-	"FL ./assets/textures/biohazard/xpm/floor.xpm",
-	"CE ./assets/textures/biohazard/xpm/ceiling.xpm",
-	"XX ./assets/textures/biohazard/enemies/enemy_1.xpm",
+	"NO ./assets/textures/biohazard/xpm/environment/wall_north.xpm",
+	"SO ./assets/textures/biohazard/xpm/environment/wall_south.xpm",
+	"EA ./assets/textures/biohazard/xpm/environment/wall_east.xpm",
+	"WE ./assets/textures/biohazard/xpm/environment/wall_west.xpm",
+	"FL ./assets/textures/biohazard/xpm/environment/floor.xpm",
+	"CE ./assets/textures/biohazard/xpm/environment/ceiling.xpm",
+	"XX ./assets/textures/biohazard/xpm/enemies/enemy_1.xpm",
 };
 
 int	main( void )

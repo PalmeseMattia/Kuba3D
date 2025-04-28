@@ -23,12 +23,14 @@ typedef struct	s_player
 	t_keycard	*keycard;
 }	t_player;
 
+typedef struct s_animation_controller	t_animation_controller;
+
 typedef struct	s_enemy
 {
-	double	x;
-	double	y;
-	int		hp;
-	size_t	*tex;
+	double					x;
+	double					y;
+	int						hp;
+	t_animation_controller	*animation_controller;	
 }	t_enemy;
 
 #include <cube_mlx_handler.h>
@@ -51,7 +53,7 @@ typedef struct	s_entities_config
 	t_point	keycard_location;
 	size_t	*keycard_tex; 
 	t_point	**enemies_locations;
-	size_t	*enemy_tex;
+	size_t	*tex;
 	int		enemies_count;
 }	t_entities_config;
 

@@ -30,6 +30,7 @@
 		"cube_dda.h": "c",
 		"cube_lifecycle.h": "c",
 		"mlx_int.h": "c",
-		"cube_drawing.h": "c"
+		"cube_drawing.h": "c",
+		"cube_animations.h": "c"
 	}
 }

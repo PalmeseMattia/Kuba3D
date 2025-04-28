@@ -82,7 +82,7 @@ void	entities_player_free(t_player *player)
 	free(player);
 }
 
-t_enemy	*entities_enemy_init(t_point pt, size_t	*tex)
+t_enemy	*entities_enemy_init(t_point pt, t_animated_frames *frames_ptr)
 {
 	t_enemy	*enemy;
 
@@ -93,7 +93,7 @@ t_enemy	*entities_enemy_init(t_point pt, size_t	*tex)
 	enemy->x = pt.x + .5;
 	enemy->y = pt.y + .5;
 	enemy->animation_controller = anim_animation_controller_init();
-	anim_animation_controller_set_animation(enemy->animation_controller, ANIM_TYPE_IDLE, tex); // TODO: Change to idle_tex, attack_tex, ...
+	anim_animation_controller_set_animation(enemy->animation_controller, ANIM_TYPE_IDLE, frames_ptr); // TODO: Change to idle_tex, attack_tex, ...
 	return (enemy);
 }
 
@@ -104,7 +104,7 @@ void	entities_enemy_free(t_enemy *enemy)
 	free(enemy);
 }
 
-t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, size_t *tex)
+t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, t_animated_frames *frames_ptr)
 {
 	t_enemy	**enemies;
 	int		i;
@@ -119,7 +119,7 @@ t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, size_t *tex
 		return (NULL);
 	i = -1;
 	while (enemy_locations[++i] != NULL)
-		enemies[i] = entities_enemy_init(*enemy_locations[i], tex);
+		enemies[i] = entities_enemy_init(*enemy_locations[i], frames_ptr);
 	enemies[i] = NULL;
 	return (enemies);
 }
@@ -157,7 +157,7 @@ t_entities	*entities_entities_init(t_entities_config config)
 	entities->enemies = NULL;
 	
 	if (config.enemies_locations != NULL)
-		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.tex);
+		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_frames_ptr);
 	else
 		printf("No enemies found, skipping initialization...\n");
 
@@ -213,16 +213,17 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 	entities_config.player_location = cube_settings->map_config->start_location;
 
 	printf("Setting enemy texture...\n");
-	if (TEX_TYPE_ENEMY < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_ENEMY])
-		entities_config.tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
-	else
-		entities_config.tex = NULL;
+	entities_config.enemy_frames_ptr = cube_settings->tex_config->enemy_frames;
 
 	printf("Setting keycard texture...\n");
 	if (TEX_TYPE_KEYCARD < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_KEYCARD])
-		entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
+	entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
 	else
-		entities_config.keycard_tex = NULL;
+	entities_config.keycard_tex = NULL;
+	
+	
+	printf("Setting exit frames...\n");
+	entities_config.exit_frames_ptr = cube_settings->tex_config->exit_frames;
 
 	printf("Entities configuration initialized successfully.\n");
 	return (entities_config);

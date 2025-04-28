@@ -5,6 +5,7 @@
 #include <utils.h>
 #include <libft.h>
 #include <cube_mlx_handler.h>
+#include <cube_settings_animated_sprites.h>
 
 t_tex_config	*settings_tex_config_init(const char **paths, t_mlx_handler *mlx_handler)
 {
@@ -14,6 +15,8 @@ t_tex_config	*settings_tex_config_init(const char **paths, t_mlx_handler *mlx_ha
 	if (!tex_config)
 		return (NULL);
 	tex_config->textures = malloc(sizeof(size_t *) * (TEXTURE_TYPES_COUNT));
+	tex_config->enemy_frames = settings_enemy_frames_init(mlx_handler);
+	tex_config->exit_frames = settings_exit_frames_init(mlx_handler);
 	if (!tex_config->textures)
 	{
 		safe_free(tex_config);
@@ -48,7 +51,7 @@ static t_image_data *settings_tex_get_image(const char *path, t_mlx_handler *mlx
     return (img);
 }
 
-static size_t	*settings_tex_get_texels(const char *path, t_mlx_handler *mlx_handler)
+size_t	*settings_tex_get_texels(const char *path, t_mlx_handler *mlx_handler)
 {
 	t_image_data			*img;
 	size_t					*texels;

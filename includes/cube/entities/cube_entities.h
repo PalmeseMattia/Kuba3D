@@ -25,12 +25,15 @@ typedef struct	s_player
 
 typedef struct s_animation_controller	t_animation_controller;
 
+// TODO: Add exit struct
+
 typedef struct	s_enemy
 {
 	double					x;
 	double					y;
 	int						hp;
 	t_animation_controller	*animation_controller;	
+	size_t					*tex;
 }	t_enemy;
 
 #include <cube_mlx_handler.h>
@@ -40,20 +43,25 @@ typedef struct	s_entities
 	t_player	*player;
 	t_enemy		**enemies;
 	t_keycard	*keycard;
+	// TODO: Add exit entity
 
 	// Sprites
 	double		buffer_z[WINDOW_WIDTH];
 	int			sprite_order;
 	double		sprite_distance;
 }	t_entities;
+	
+typedef struct s_animated_frames t_animated_frames;
 
 typedef struct	s_entities_config
 {
-	t_point	player_location;
-	t_point	keycard_location;
-	size_t	*keycard_tex; 
-	t_point	**enemies_locations;
-	size_t	*tex;
+	t_point				player_location;
+	t_point				keycard_location;
+	size_t				*keycard_tex; 
+	t_point				**enemies_locations;
+	t_animated_frames	*enemy_frames_ptr;
+	t_animated_frames	*exit_frames_ptr;
+	// TODO: Add exit entity
 	int		enemies_count;
 }	t_entities_config;
 

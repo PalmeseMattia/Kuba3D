@@ -3,6 +3,8 @@
 #include <cube_settings_map.h>
 #include <cube.h>
 #include <cube_drawing.h>
+#include <cube_animations.h>
+#include <cube_settings_animated_sprites.h>
 #include <math.h>
 #include <stdlib.h>
 
@@ -55,6 +57,8 @@ void sprites_draw(t_cube *cube)
     int			num_sprites;
     int			*sprite_order;
     double		*sprite_distance;
+
+	size_t		*tex;
     
     // Get entities and player pointers
     entities = cube->entities;
@@ -136,9 +140,9 @@ void sprites_draw(t_cube *cube)
                 
                 // Get color from sprite texture
                 unsigned int color = 0;
-                if (sprite->tex)
-                    color = sprite->tex[TEXTURE_SIZE * tex_y + tex_x];
-                
+				tex = sprite->animation_controller->idle->frames_ptr->frames[sprite->animation_controller->idle->frame];
+                if (tex)
+                    color = tex[TEXTURE_SIZE * tex_y + tex_x];
                 // Draw pixel if it's not transparent (assuming 0 is transparent)
                 if ((color & 0x00FFFFFF) != 0)
                     draw_my_mlx_pixel_put(cube->mlx_handler->mlx_img, stripe, y, color);

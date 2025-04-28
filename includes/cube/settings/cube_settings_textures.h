@@ -38,9 +38,14 @@ typedef enum	s_tex_type
 
 # define TEXTURE_TYPES_COUNT 7
 
+
+typedef struct s_animated_frames t_animated_frames;
+
 typedef struct	s_tex_config
 {
-	size_t	**textures;
+	size_t				**textures;
+	t_animated_frames	*enemy_frames;
+	t_animated_frames	*exit_frames;
 }	t_tex_config;
 
 typedef struct s_mlx_handler	t_mlx_handler;
@@ -49,5 +54,6 @@ t_tex_config	*settings_tex_config_init(const char **paths, t_mlx_handler *mlx_ha
 void			settings_tex_config_set_tex_all(t_tex_config *config, 
 	t_mlx_handler *mlx_handler, const char **paths);
 void			settings_tex_config_free(t_tex_config *tex_config);
+size_t			*settings_tex_get_texels(const char *path, t_mlx_handler *mlx_handler);
 
 #endif

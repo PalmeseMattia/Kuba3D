@@ -44,7 +44,7 @@ const char *paths[] = {
 	"WE ./assets/textures/biohazard/xpm/environment/wall_west.xpm",
 	"FL ./assets/textures/biohazard/xpm/environment/floor.xpm",
 	"CE ./assets/textures/biohazard/xpm/environment/ceiling.xpm",
-	"XX ./assets/textures/biohazard/xpm/enemies/enemy_1.xpm",
+	"XX ./assets/textures/biohazard/xpm/enemies/enemy_0.xpm",
 };
 
 int	main( void )

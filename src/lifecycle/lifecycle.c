@@ -2,7 +2,9 @@
 #include <cube_runtime.h>
 #include <cube_drawing.h>
 #include <cube_input_handler.h>
+#include <cube_animations.h>
 #include <cube.h>
+#include <cube_entities.h>
 #include <sys/time.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,6 +23,28 @@ static double framerate_get_ticks()
     return (tv.tv_sec * 1000.0) + (tv.tv_usec / 1000.0);
 }
 
+static void	animate_sprites(t_cube *cube)
+{
+	int		i;
+	int		frame;
+	t_enemy	*enemy;
+
+	static double	last_time = 0;
+	double			current_time;
+
+	current_time = framerate_get_ticks();
+	if (current_time - last_time >= 250) // 250 ms = 4 times a second
+	{
+		i = -1;
+		while (cube->entities->enemies[++i])
+		{
+			enemy = cube->entities->enemies[i];
+			frame = enemy->animation_controller->idle->frame + 1;
+			enemy->animation_controller->idle->frame = frame % 3;
+		}
+		last_time = current_time;
+	}
+}
 
 int game_loop_hook(t_cube *cube)
 {
@@ -31,6 +55,7 @@ int game_loop_hook(t_cube *cube)
 	}
 	cube->runtime_handler->old_time = cube->runtime_handler->time;
 	cube->runtime_handler->time = framerate_get_ticks();
+	animate_sprites(cube);
 	draw_scene(cube);
 	mov_handler(cube);
 	return (0);

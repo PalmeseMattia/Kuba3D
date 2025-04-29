@@ -38,10 +38,28 @@ t_animation_controller	*anim_animation_controller_init()
 	return (animation_controller);
 }
 
-void	anim_animation_controller_free(t_animation_controller *animation_controller)
+void anim_animation_controller_free(t_animation_controller *animation_controller)
 {
-	safe_free(animation_controller);
-	animation_controller = NULL;
+    if (!animation_controller)
+        return;
+        
+    // Free individual animations
+    if (animation_controller->attack)
+        anim_animation_free(animation_controller->attack);
+    if (animation_controller->die)
+        anim_animation_free(animation_controller->die);
+    if (animation_controller->idle)
+        anim_animation_free(animation_controller->idle);
+    if (animation_controller->open)
+        anim_animation_free(animation_controller->open);
+    if (animation_controller->reload)
+        anim_animation_free(animation_controller->reload);
+    if (animation_controller->take_damage)
+        anim_animation_free(animation_controller->take_damage);
+        
+    // Free the controller itself
+    safe_free(animation_controller);
+    animation_controller = NULL;
 }
 
 void	anim_animation_controller_set_animation(

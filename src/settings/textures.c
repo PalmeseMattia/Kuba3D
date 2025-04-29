@@ -145,6 +145,7 @@ void	settings_tex_config_set_tex_all(t_tex_config *config, t_mlx_handler *mlx_ha
 	}
 }
 
+// Add to settings_tex_config_free in textures.c
 void settings_tex_config_free(t_tex_config *tex_config)
 {
     int i;
@@ -152,6 +153,7 @@ void settings_tex_config_free(t_tex_config *tex_config)
     if (!tex_config)
         return;
     
+    // Free individual textures
     if (tex_config->textures)
     {
         i = -1;
@@ -159,5 +161,30 @@ void settings_tex_config_free(t_tex_config *tex_config)
             safe_free(tex_config->textures[i]);
         safe_free(tex_config->textures);
     }
+    
+    // Free animation frames for enemy
+    if (tex_config->enemy_frames)
+    {
+        if (tex_config->enemy_frames->frames)
+        {
+            for (i = 0; i < tex_config->enemy_frames->frames_count; i++)
+                safe_free(tex_config->enemy_frames->frames[i]);
+            safe_free(tex_config->enemy_frames->frames);
+        }
+        safe_free(tex_config->enemy_frames);
+    }
+    
+    // Free animation frames for exit
+    if (tex_config->exit_frames)
+    {
+        if (tex_config->exit_frames->frames)
+        {
+            for (i = 0; i < tex_config->exit_frames->frames_count; i++)
+                safe_free(tex_config->exit_frames->frames[i]);
+            safe_free(tex_config->exit_frames->frames);
+        }
+        safe_free(tex_config->exit_frames);
+    }
+    
     safe_free(tex_config);
 }

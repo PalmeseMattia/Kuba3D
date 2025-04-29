@@ -97,11 +97,37 @@ t_enemy	*entities_enemy_init(t_point pt, t_animated_frames *frames_ptr)
 	return (enemy);
 }
 
-void	entities_enemy_free(t_enemy *enemy)
+void entities_enemy_free(t_enemy *enemy)
 {
 	if (!enemy)
-		return ;
-	free(enemy);
+		return;
+	if (enemy->animation_controller)
+		anim_animation_controller_free(enemy->animation_controller);
+	safe_free(enemy);
+}
+
+t_exit	*entities_exit_init(t_point pt, t_animated_frames *frames_ptr)
+{
+	t_exit	*ret;
+
+	ret = malloc(sizeof(t_exit));
+	if (!ret)
+		return (NULL);
+	ret->x = pt.x + .5;
+	ret->y = pt.y + .5;
+	ret->unlocked = FALSE;
+	ret->animation_controller = anim_animation_controller_init();
+	anim_animation_controller_set_animation(ret->animation_controller, ANIM_TYPE_IDLE, frames_ptr);
+	return (ret);
+}
+
+void entities_exit_free(t_exit *exit_entity)
+{
+	if (!exit_entity)
+		return;
+	if (exit_entity->animation_controller)
+		anim_animation_controller_free(exit_entity->animation_controller);
+	safe_free(exit_entity);
 }
 
 t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, t_animated_frames *frames_ptr)
@@ -140,9 +166,10 @@ void entities_enemies_multiple_free(t_enemy **enemies)
 	enemies = NULL;
 }
 
-t_entities	*entities_entities_init(t_entities_config config)
+t_entities *entities_entities_init(t_entities_config config)
 {
 	t_entities *entities;
+	int num_enemies = 0;
 
 	printf("Allocating memory for entities...\n");
 	entities = malloc(sizeof(t_entities));
@@ -151,7 +178,11 @@ t_entities	*entities_entities_init(t_entities_config config)
 		printf("Failed to allocate memory for entities.\n");
 		return (NULL);
 	}
+
 	
+	printf("Initializing exit...\n");
+	entities->exit = entities_exit_init(config.exit_location, config.exit_frames_ptr);
+
 	printf("Initializing enemies...\n");
 	// Initialize enemies pointer to NULL by default
 	entities->enemies = NULL;
@@ -180,8 +211,41 @@ t_entities	*entities_entities_init(t_entities_config config)
 		free(entities);
 		return (NULL);
 	}
+
+	// Allocate memory for sprite arrays
+	num_enemies = config.enemies_count;
+	if (num_enemies > 0)
+	{
+		entities->sprite_order = malloc(sizeof(int) * num_enemies);
+		entities->sprite_distance = malloc(sizeof(double) * num_enemies);
+		
+		if (!entities->sprite_order || !entities->sprite_distance)
+		{
+			printf("Failed to allocate sprite arrays\n");
+			// Clean up and return NULL
+			if (entities->sprite_order)
+				safe_free(entities->sprite_order);
+			if (entities->sprite_distance)
+				safe_free(entities->sprite_distance);
+			if (entities->enemies)
+				entities_enemies_multiple_free(entities->enemies);
+			if (entities->player)
+				entities_player_free(entities->player);
+			if (entities->keycard)
+				entities_keycard_free(entities->keycard);
+			if (entities->exit)
+				entities_exit_free(entities->exit);
+			safe_free(entities);
+			return NULL;
+		}
+	}
+	else
+	{
+		entities->sprite_order = NULL;
+		entities->sprite_distance = NULL;
+	}
 	printf("Entities initialized successfully.\n");
-	return (entities);
+	return entities;
 }
 
 void entities_entities_free(t_entities *entities)
@@ -194,6 +258,12 @@ void entities_entities_free(t_entities *entities)
 		entities_player_free(entities->player);
 	if (entities->keycard)
 		entities_keycard_free(entities->keycard);
+	if (entities->exit)
+		entities_exit_free(entities->exit);
+	if (entities->sprite_order)
+		safe_free(entities->sprite_order);
+	if (entities->sprite_distance)
+		safe_free(entities->sprite_distance);
 	safe_free(entities);
 }
 
@@ -221,9 +291,9 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 	else
 	entities_config.keycard_tex = NULL;
 	
-	
-	printf("Setting exit frames...\n");
+	printf("Setting exit data...\n");
 	entities_config.exit_frames_ptr = cube_settings->tex_config->exit_frames;
+	entities_config.exit_location = cube_settings->map_config->exit_location;
 
 	printf("Entities configuration initialized successfully.\n");
 	return (entities_config);

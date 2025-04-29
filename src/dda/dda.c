@@ -71,6 +71,8 @@ void	dda_perform(t_cube *cube)
 		}
 		if (cube->map->tiles[dda->map_y][dda->map_x].c == '1')
 			hit = 1;
+		else if (cube->map->tiles[dda->map_y][dda->map_x].c == 'Q')
+			hit = 1;
 	}
 }
 

@@ -8,6 +8,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <cube_minimap.h>
+#include <cube_animations.h>
+#include <cube_settings_animated_sprites.h>
 
 void	draw_my_mlx_pixel_put(t_image_data *data, int x, int y, int color)
 {
@@ -75,22 +77,33 @@ static t_draw_vertical_slice_data	draw_prep_vertical_slice_data(t_cube *cube, in
 	else
 		data.tex_pos = 0;
 	data.column_x = column_x;
+	if (cube->map->tiles[dda->map_y][dda->map_x].c == 'Q')
+		data.tex_type = TEX_TYPE_EXIT;
 	return (data);
 }
 
 static void draw_textured(t_draw_vertical_slice_data *data, t_cube *cube, int y)
 {
-	int tex_y;
-	unsigned int color;
-	size_t **textures;
-	t_dda_data *dda;
+	int					tex_y;
+	t_animation			*anim;
+	unsigned int		color;
+	size_t				**textures;
+	t_dda_data			*dda;
 
 	dda = cube->dda_data;
 	tex_y = (int)data->tex_pos & (TEXTURE_SIZE - 1);
 	data->tex_pos += data->step;
 	textures = cube->cube_settings->tex_config->textures;
-	
-	if (textures && data->tex_type >= 0 && data->tex_type < TEXTURE_TYPES_COUNT && 
+	if (data->tex_type == TEX_TYPE_EXIT)
+	{
+		anim = cube->entities->exit->animation_controller->idle;
+		color = anim->frames_ptr->frames[anim->frame][TEXTURE_SIZE * tex_y + data->tex_x];
+		// Darken the color for horizontal walls
+		if (dda->hit_type == HORIZONTAL) 
+			color = (color >> 1) & 8355711;
+		draw_my_mlx_pixel_put(cube->mlx_handler->mlx_img, data->column_x, y, color);
+	}
+	else if (textures && data->tex_type >= 0 && data->tex_type < TEXTURE_TYPES_COUNT && 
 		textures[data->tex_type] && tex_y >= 0 && tex_y < TEXTURE_SIZE && 
 		data->tex_x >= 0 && data->tex_x < TEXTURE_SIZE)
 	{

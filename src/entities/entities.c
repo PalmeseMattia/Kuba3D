@@ -3,7 +3,7 @@
 #include <cube_settings.h>
 #include <cube_mlx_handler.h>
 #include <cube_animations.h>
-#include <stdio.h>
+#include <libft.h>
 
 t_keycard	*entities_keycard_init(t_point pt, size_t *tex)
 {
@@ -221,22 +221,8 @@ t_entities *entities_entities_init(t_entities_config config)
 		
 		if (!entities->sprite_order || !entities->sprite_distance)
 		{
-			printf("Failed to allocate sprite arrays\n");
-			// Clean up and return NULL
-			if (entities->sprite_order)
-				safe_free(entities->sprite_order);
-			if (entities->sprite_distance)
-				safe_free(entities->sprite_distance);
-			if (entities->enemies)
-				entities_enemies_multiple_free(entities->enemies);
-			if (entities->player)
-				entities_player_free(entities->player);
-			if (entities->keycard)
-				entities_keycard_free(entities->keycard);
-			if (entities->exit)
-				entities_exit_free(entities->exit);
-			safe_free(entities);
-			return NULL;
+			entities_entities_free(entities);
+			return (NULL);
 		}
 	}
 	else
@@ -244,7 +230,6 @@ t_entities *entities_entities_init(t_entities_config config)
 		entities->sprite_order = NULL;
 		entities->sprite_distance = NULL;
 	}
-	printf("Entities initialized successfully.\n");
 	return entities;
 }
 
@@ -252,18 +237,12 @@ void entities_entities_free(t_entities *entities)
 {
 	if (!entities)
 		return;
-	if (entities->enemies)
-		entities_enemies_multiple_free(entities->enemies);
-	if (entities->player)
-		entities_player_free(entities->player);
-	if (entities->keycard)
-		entities_keycard_free(entities->keycard);
-	if (entities->exit)
-		entities_exit_free(entities->exit);
-	if (entities->sprite_order)
-		safe_free(entities->sprite_order);
-	if (entities->sprite_distance)
-		safe_free(entities->sprite_distance);
+	entities_enemies_multiple_free(entities->enemies);
+	entities_player_free(entities->player);
+	entities_keycard_free(entities->keycard);
+	entities_exit_free(entities->exit);
+	safe_free(entities->sprite_order);
+	safe_free(entities->sprite_distance);
 	safe_free(entities);
 }
 
@@ -271,30 +250,14 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 {
 	t_entities_config	entities_config;
 
-	printf("Initializing entities configuration...\n");
-	printf("Setting enemies locations...\n");
 	entities_config.enemies_locations = cube_settings->map_config->enemies_locations;
 	entities_config.enemies_count = cube_settings->map_config->enemies_count;
-
-	printf("Setting keycard location...\n");
 	entities_config.keycard_location = cube_settings->map_config->key_location;
-
-	printf("Setting player start location...\n");
 	entities_config.player_location = cube_settings->map_config->start_location;
-
-	printf("Setting enemy texture...\n");
 	entities_config.enemy_frames_ptr = cube_settings->tex_config->enemy_frames;
-
-	printf("Setting keycard texture...\n");
-	if (TEX_TYPE_KEYCARD < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_KEYCARD])
-	entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
-	else
 	entities_config.keycard_tex = NULL;
-	
-	printf("Setting exit data...\n");
 	entities_config.exit_frames_ptr = cube_settings->tex_config->exit_frames;
 	entities_config.exit_location = cube_settings->map_config->exit_location;
-
-	printf("Entities configuration initialized successfully.\n");
+	ft_printf("Entities configuration initialized successfully.\n");
 	return (entities_config);
 }

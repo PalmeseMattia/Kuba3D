@@ -10,15 +10,11 @@
 # define ANIM_ENEMY_IDLE_FRAME_6 "assets/textures/biohazard/xpm/enemies/idle_6.xpm"
 # define ANIM_ENEMY_FRAMES_COUNT 7
 
-# define ANIM_EXIT_IDLE_FRAME_0 "assets/textures/biohazard/xpm/exit/00.xpm"
-# define ANIM_EXIT_IDLE_FRAME_1 "assets/textures/biohazard/xpm/exit/10.xpm"
-# define ANIM_EXIT_IDLE_FRAME_2 "assets/textures/biohazard/xpm/exit/20.xpm"
-# define ANIM_EXIT_IDLE_FRAME_3 "assets/textures/biohazard/xpm/exit/30.xpm"
-# define ANIM_EXIT_IDLE_FRAME_4 "assets/textures/biohazard/xpm/exit/40.xpm"
-# define ANIM_EXIT_IDLE_FRAME_5 "assets/textures/biohazard/xpm/exit/50.xpm"
-# define ANIM_EXIT_IDLE_FRAME_6 "assets/textures/biohazard/xpm/exit/60.xpm"
-# define ANIM_EXIT_IDLE_FRAME_7 "assets/textures/biohazard/xpm/exit/70.xpm"
-# define ANIM_EXIT_FRAMES_COUNT 8
+# define ANIM_EXIT_IDLE_FRAME_0 "./assets/textures/biohazard/xpm/exit/exit_0.xpm"
+# define ANIM_EXIT_IDLE_FRAME_1 "./assets/textures/biohazard/xpm/exit/exit_1.xpm"
+# define ANIM_EXIT_IDLE_FRAME_2 "./assets/textures/biohazard/xpm/exit/exit_2.xpm"
+# define ANIM_EXIT_IDLE_FRAME_3 "./assets/textures/biohazard/xpm/exit/exit_3.xpm"
+# define ANIM_EXIT_FRAMES_COUNT 4
 
 # include <stdlib.h>
 

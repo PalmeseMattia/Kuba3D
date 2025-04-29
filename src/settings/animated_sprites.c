@@ -46,9 +46,5 @@ t_animated_frames	*settings_exit_frames_init(t_mlx_handler *mlx_handler)
 	exit_frames->frames[1] = settings_tex_get_texels(ANIM_EXIT_IDLE_FRAME_1, mlx_handler);
 	exit_frames->frames[2] = settings_tex_get_texels(ANIM_EXIT_IDLE_FRAME_2, mlx_handler);
 	exit_frames->frames[3] = settings_tex_get_texels(ANIM_EXIT_IDLE_FRAME_3, mlx_handler);
-	exit_frames->frames[4] = settings_tex_get_texels(ANIM_EXIT_IDLE_FRAME_4, mlx_handler);
-	exit_frames->frames[5] = settings_tex_get_texels(ANIM_EXIT_IDLE_FRAME_5, mlx_handler);
-	exit_frames->frames[6] = settings_tex_get_texels(ANIM_EXIT_IDLE_FRAME_6, mlx_handler);
-	exit_frames->frames[7] = settings_tex_get_texels(ANIM_EXIT_IDLE_FRAME_7, mlx_handler);
 	return (exit_frames);
 }

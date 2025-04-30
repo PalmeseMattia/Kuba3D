@@ -6,19 +6,6 @@
 #include <cube_map.h>
 #include <math.h>
 
-void	dda_set_wall_height(t_cube *cube)
-{
-	double		perp_wall_dist;
-	t_dda_data	*dda;
-
-	dda = cube->dda_data;
-	if (dda->hit_type == HORIZONTAL)
-		perp_wall_dist = (dda->side_dist_x - dda->delta_dist_x);
-	else
-		perp_wall_dist = (dda->side_dist_y - dda->delta_dist_y);
-	dda->wall_height = (int)(WINDOW_HEIGHT / perp_wall_dist);
-}
-
 void dda_setup(t_cube *cube, double camera_x)
 {
     t_player *player;
@@ -83,6 +70,8 @@ void	dda_perform(t_cube *cube)
 			break;
 		}
 		if (cube->map->tiles[dda->map_y][dda->map_x].c == '1')
+			hit = 1;
+		else if (cube->map->tiles[dda->map_y][dda->map_x].c == 'Q')
 			hit = 1;
 	}
 }

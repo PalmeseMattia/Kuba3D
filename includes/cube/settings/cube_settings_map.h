@@ -11,6 +11,7 @@ typedef struct	s_map_config
 	t_point	start_location;
 	t_point	key_location;
 	t_point	**enemies_locations;
+	int		enemies_count;
 	char	**map;
 }	t_map_config;
 

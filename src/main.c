@@ -30,21 +30,21 @@ char *map[] = {
 	"100000000011011000001001",
 	"100000000000110010001001",
 	"100000000011011000011011",
-	"101010000011000010000001",
+	"101010000011000010X00001",
 	"100100000011011000011011",
-	"10101000001101101E001001",
-	"1Q0000000000000000000001",
+	"10101000001101101E0Q1001",
+	"100000000000X00000000001",
 	"111111111111111111111111"
 };
 
 const char *paths[] = {
-	"NO ./assets/textures/biohazard/xpm/wall_north.xpm",
-	"SO ./assets/textures/biohazard/xpm/wall_south.xpm",
-	"EA ./assets/textures/biohazard/xpm/wall_east.xpm",
-	"WE ./assets/textures/biohazard/xpm/wall_west.xpm",
-	"FL ./assets/textures/biohazard/xpm/floor.xpm",
-	"CE ./assets/textures/biohazard/xpm/ceiling.xpm",
-	"XX ./assets/textures/biohazard/enemies/enemy_1.xpm",
+	"NO ./assets/textures/biohazard/xpm/environment/wall_north.xpm",
+	"SO ./assets/textures/biohazard/xpm/environment/wall_south.xpm",
+	"EA ./assets/textures/biohazard/xpm/environment/wall_east.xpm",
+	"WE ./assets/textures/biohazard/xpm/environment/wall_west.xpm",
+	"FL ./assets/textures/biohazard/xpm/environment/floor.xpm",
+	"CE ./assets/textures/biohazard/xpm/environment/ceiling.xpm",
+	"XX ./assets/textures/biohazard/xpm/enemies/enemy_0.xpm",
 };
 
 int	main( void )
@@ -55,7 +55,7 @@ int	main( void )
 	mlx_hook(cube->mlx_handler->mlx_win, 2, 1L << 0, input_handler_key_press, cube);
 	mlx_hook(cube->mlx_handler->mlx_win, 3, 1L << 1, input_handler_key_release, cube);
 	mlx_hook(cube->mlx_handler->mlx_win, DestroyNotify,
-		StructureNotifyMask, &on_destroy, &cube);
+		StructureNotifyMask, &on_destroy, cube);
 	mlx_loop_hook(cube->mlx_handler->mlx, game_loop_hook, cube);
 	mlx_loop(cube->mlx_handler->mlx);
 	return (EXIT_SUCCESS);

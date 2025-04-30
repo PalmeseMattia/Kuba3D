@@ -3,6 +3,7 @@
 
 # define WINDOW_WIDTH 960
 # define WINDOW_HEIGHT 640
+
 # define FOV .66
 
 typedef struct	s_image_data

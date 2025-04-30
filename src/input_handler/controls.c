@@ -3,6 +3,7 @@
 #include <cube.h>
 #include <cube_entities.h>
 #include <cube_runtime.h>
+#include <cube_animations.h>
 #include <math.h>
 #include <stdio.h>
 
@@ -117,7 +118,23 @@ int input_handler_key_press(int key_code, t_cube *cube)
 		keys->right = 1;
 	else if (key_code == KEY_ESC)
 		keys->escape = 1;
+	else if (key_code == KEY_E)
+		keys->e = 1;
 	return (0);
+}
+
+void	input_handler_action(t_cube *cube)
+{
+	t_input_handler_keys	*keys;
+	t_exit					*exit;
+
+	keys = cube->input_handler->keys;
+	exit = cube->entities->exit;
+	if (keys->e)
+	{
+		printf("Action key active\n");
+		anim_animation_controller_player_start(exit->animation_controller, ANIM_TYPE_OPEN);
+	}
 }
 
 int input_handler_key_release(int key_code, t_cube *cube)
@@ -137,6 +154,8 @@ int input_handler_key_release(int key_code, t_cube *cube)
 		keys->left = 0;
 	else if (key_code == KEY_ARROW_RIGHT)
 		keys->right = 0;
+	else if (key_code == KEY_E)
+		keys->e = 0;
 	return (0);
 }
 

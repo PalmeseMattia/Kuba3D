@@ -114,6 +114,66 @@ static void	minimap_draw_player(t_minimap_data *mmd)
 			}
 		}
 	}
+
+}
+
+static void minimap_draw_enemies(t_minimap_data *mmd)
+{
+    t_cube *cube = mmd->cube;
+    t_enemy **enemies = cube->entities->enemies;
+    int enemy_size = MINIMAP_PLAYER_SIZE - 1; // Make enemies slightly smaller than player
+    int i = 0;
+    
+    // Skip if no enemies
+    if (!enemies)
+        return;
+    
+    // Draw each enemy as a small square
+    while (enemies[i] != NULL)
+    {
+        // Calculate enemy position on minimap
+        int enemy_map_x = (int)enemies[i]->x;
+        int enemy_map_y = (int)enemies[i]->y;
+        
+        // Only draw enemies that are within the visible area of the minimap
+        if (abs(enemy_map_x - mmd->map_center_x) <= mmd->map_radius && 
+            abs(enemy_map_y - mmd->map_center_y) <= mmd->map_radius)
+        {
+            // Calculate screen position
+            int screen_x = mmd->minimap_pos_x + 
+                          (enemy_map_x - mmd->map_center_x + mmd->map_radius) * 
+                          MINIMAP_CELL_SIZE;
+            int screen_y = mmd->minimap_pos_y + 
+                          (enemy_map_y - mmd->map_center_y + mmd->map_radius) * 
+                          MINIMAP_CELL_SIZE;
+            
+            // Draw the enemy as a small red square
+            for (int y = -enemy_size; y <= enemy_size; y++)
+            {
+                for (int x = -enemy_size; x <= enemy_size; x++)
+                {
+                    // Make a square shape with rounded corners
+                    if (x*x + y*y <= enemy_size*enemy_size)
+                    {
+                        int px = screen_x + x;
+                        int py = screen_y + y;
+                        
+                        // Only draw within minimap bounds
+                        if (px >= mmd->minimap_pos_x && 
+                            px < mmd->minimap_pos_x + MINIMAP_SIZE && 
+                            py >= mmd->minimap_pos_y && 
+                            py < mmd->minimap_pos_y + MINIMAP_SIZE)
+                        {
+                            // Draw enemy in red
+                            draw_my_mlx_pixel_put(mmd->img, px, py, 0xFF0000);
+                        }
+                    }
+                }
+            }
+        }
+        
+        i++;
+    }
 }
 
 static void	minimap_bresenham_data_init(t_minimap_data *mmd)
@@ -157,32 +217,35 @@ static void	minimap_draw_direction_line(t_minimap_data *mmd)
 
 void draw_minimap(t_cube *cube)
 {
-	t_minimap_data	mmd;
+    t_minimap_data	mmd;
 
-	mmd.minimap_pos_x = WINDOW_WIDTH - MINIMAP_SIZE - MINIMAP_MARGIN;
-	mmd.minimap_pos_y = MINIMAP_MARGIN;
-	mmd.player = cube->entities->player;
-	mmd.img = cube->mlx_handler->mlx_img;
-	mmd.cube = cube;
+    mmd.minimap_pos_x = WINDOW_WIDTH - MINIMAP_SIZE - MINIMAP_MARGIN;
+    mmd.minimap_pos_y = MINIMAP_MARGIN;
+    mmd.player = cube->entities->player;
+    mmd.img = cube->mlx_handler->mlx_img;
+    mmd.cube = cube;
 
-	// Draw minimap border
-	minimap_draw_border(&mmd);
-	
-	// Draw minimap background
-	minimap_draw_background(&mmd);
-	
-	// Calculate the visible area around the player
-	mmd.map_center_x = (int)mmd.player->x;
-	mmd.map_center_y = (int)mmd.player->y;
-	mmd.map_radius = MINIMAP_SIZE / (2 * MINIMAP_CELL_SIZE);
-	
-	// Draw map cells
-	minimap_draw_cells(&mmd);
-	
-	// Draw player
-	minimap_draw_player(&mmd);
-	
-	// Draw direction line
-	minimap_bresenham_data_init(&mmd);
-	minimap_draw_direction_line(&mmd);	
+    // Draw minimap border
+    minimap_draw_border(&mmd);
+    
+    // Draw minimap background
+    minimap_draw_background(&mmd);
+    
+    // Calculate the visible area around the player
+    mmd.map_center_x = (int)mmd.player->x;
+    mmd.map_center_y = (int)mmd.player->y;
+    mmd.map_radius = MINIMAP_SIZE / (2 * MINIMAP_CELL_SIZE);
+    
+    // Draw map cells
+    minimap_draw_cells(&mmd);
+    
+    // Draw enemies on the minimap
+    minimap_draw_enemies(&mmd);
+    
+    // Draw player
+    minimap_draw_player(&mmd);
+    
+    // Draw direction line
+    minimap_bresenham_data_init(&mmd);
+    minimap_draw_direction_line(&mmd);
 }

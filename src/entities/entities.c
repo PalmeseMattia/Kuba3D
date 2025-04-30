@@ -2,7 +2,8 @@
 #include <cube_entities.h>
 #include <cube_settings.h>
 #include <cube_mlx_handler.h>
-#include <stdio.h>
+#include <cube_animations.h>
+#include <libft.h>
 
 t_keycard	*entities_keycard_init(t_point pt, size_t *tex)
 {
@@ -36,8 +37,8 @@ t_player *entities_player_init(t_point pt)
 		return (NULL);
 	player->hp = 100;
 	player->keycard = NULL;
-	player->x = pt.x;
-	player->y = pt.y;
+	player->x = pt.x + .5;
+	player->y = pt.y + .5;
 
 	// Initialize direction based on starting character
 	if (pt.c == 'N')
@@ -81,7 +82,7 @@ void	entities_player_free(t_player *player)
 	free(player);
 }
 
-t_enemy	*entities_enemy_init(t_point pt, size_t	*tex)
+t_enemy	*entities_enemy_init(t_point pt, t_animated_frames *frames_ptr)
 {
 	t_enemy	*enemy;
 
@@ -89,20 +90,51 @@ t_enemy	*entities_enemy_init(t_point pt, size_t	*tex)
 	if (!enemy)
 		return (NULL);
 	enemy->hp = 100;
-	enemy->x = pt.x;
-	enemy->y = pt.y;
-	enemy->tex = tex;
+	enemy->x = pt.x + .5;
+	enemy->y = pt.y + .5;
+	enemy->animation_controller = anim_animation_controller_init();
+	anim_animation_controller_set_animation(enemy->animation_controller, ANIM_TYPE_IDLE, frames_ptr); // TODO: Change to idle_tex, attack_tex, ...
+	enemy->animation_controller->playing = TRUE;
+	enemy->animation_controller->current = enemy->animation_controller->idle;
 	return (enemy);
 }
 
-void	entities_enemy_free(t_enemy *enemy)
+void entities_enemy_free(t_enemy *enemy)
 {
 	if (!enemy)
-		return ;
-	free(enemy);
+		return;
+	if (enemy->animation_controller)
+		anim_animation_controller_free(enemy->animation_controller);
+	safe_free(enemy);
 }
 
-t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, size_t *tex)
+t_exit	*entities_exit_init(t_point pt, t_animated_frames *frames_ptr)
+{
+	t_exit	*ret;
+
+	ret = malloc(sizeof(t_exit));
+	if (!ret)
+		return (NULL);
+	ret->x = pt.x + .5;
+	ret->y = pt.y + .5;
+	ret->unlocked = FALSE;
+	ret->animation_controller = anim_animation_controller_init();
+	anim_animation_controller_set_animation(ret->animation_controller, ANIM_TYPE_IDLE, frames_ptr);
+	ret->animation_controller->playing = FALSE;
+	ret->animation_controller->current = ret->animation_controller->idle;
+	return (ret);
+}
+
+void entities_exit_free(t_exit *exit_entity)
+{
+	if (!exit_entity)
+		return;
+	if (exit_entity->animation_controller)
+		anim_animation_controller_free(exit_entity->animation_controller);
+	safe_free(exit_entity);
+}
+
+t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, t_animated_frames *frames_ptr)
 {
 	t_enemy	**enemies;
 	int		i;
@@ -117,7 +149,7 @@ t_enemy		**entities_enemies_multiple_init(t_point **enemy_locations, size_t *tex
 		return (NULL);
 	i = -1;
 	while (enemy_locations[++i] != NULL)
-		enemies[i] = entities_enemy_init(*enemy_locations[i], tex);
+		enemies[i] = entities_enemy_init(*enemy_locations[i], frames_ptr);
 	enemies[i] = NULL;
 	return (enemies);
 }
@@ -138,9 +170,10 @@ void entities_enemies_multiple_free(t_enemy **enemies)
 	enemies = NULL;
 }
 
-t_entities	*entities_entities_init(t_entities_config config)
+t_entities *entities_entities_init(t_entities_config config)
 {
 	t_entities *entities;
+	int num_enemies = 0;
 
 	printf("Allocating memory for entities...\n");
 	entities = malloc(sizeof(t_entities));
@@ -149,13 +182,17 @@ t_entities	*entities_entities_init(t_entities_config config)
 		printf("Failed to allocate memory for entities.\n");
 		return (NULL);
 	}
+
 	
+	printf("Initializing exit...\n");
+	entities->exit = entities_exit_init(config.exit_location, config.exit_frames_ptr);
+
 	printf("Initializing enemies...\n");
 	// Initialize enemies pointer to NULL by default
 	entities->enemies = NULL;
 	
 	if (config.enemies_locations != NULL)
-		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_tex);
+		entities->enemies = entities_enemies_multiple_init(config.enemies_locations, config.enemy_frames_ptr);
 	else
 		printf("No enemies found, skipping initialization...\n");
 
@@ -178,20 +215,38 @@ t_entities	*entities_entities_init(t_entities_config config)
 		free(entities);
 		return (NULL);
 	}
-	printf("Entities initialized successfully.\n");
-	return (entities);
+
+	// Allocate memory for sprite arrays
+	num_enemies = config.enemies_count;
+	if (num_enemies > 0)
+	{
+		entities->sprite_order = malloc(sizeof(int) * num_enemies);
+		entities->sprite_distance = malloc(sizeof(double) * num_enemies);
+		
+		if (!entities->sprite_order || !entities->sprite_distance)
+		{
+			entities_entities_free(entities);
+			return (NULL);
+		}
+	}
+	else
+	{
+		entities->sprite_order = NULL;
+		entities->sprite_distance = NULL;
+	}
+	return entities;
 }
 
 void entities_entities_free(t_entities *entities)
 {
 	if (!entities)
 		return;
-	if (entities->enemies)
-		entities_enemies_multiple_free(entities->enemies);
-	if (entities->player)
-		entities_player_free(entities->player);
-	if (entities->keycard)
-		entities_keycard_free(entities->keycard);
+	entities_enemies_multiple_free(entities->enemies);
+	entities_player_free(entities->player);
+	entities_keycard_free(entities->keycard);
+	entities_exit_free(entities->exit);
+	safe_free(entities->sprite_order);
+	safe_free(entities->sprite_distance);
 	safe_free(entities);
 }
 
@@ -199,28 +254,14 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 {
 	t_entities_config	entities_config;
 
-	printf("Initializing entities configuration...\n");
-	printf("Setting enemies locations...\n");
 	entities_config.enemies_locations = cube_settings->map_config->enemies_locations;
-
-	printf("Setting keycard location...\n");
+	entities_config.enemies_count = cube_settings->map_config->enemies_count;
 	entities_config.keycard_location = cube_settings->map_config->key_location;
-
-	printf("Setting player start location...\n");
 	entities_config.player_location = cube_settings->map_config->start_location;
-
-	printf("Setting enemy texture...\n");
-	if (TEX_TYPE_ENEMY < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_ENEMY])
-		entities_config.enemy_tex = cube_settings->tex_config->textures[TEX_TYPE_ENEMY];
-	else
-		entities_config.enemy_tex = NULL;
-
-	printf("Setting keycard texture...\n");
-	if (TEX_TYPE_KEYCARD < TEXTURE_TYPES_COUNT && cube_settings->tex_config->textures[TEX_TYPE_KEYCARD])
-		entities_config.keycard_tex = cube_settings->tex_config->textures[TEX_TYPE_KEYCARD];
-	else
-		entities_config.keycard_tex = NULL;
-
-	printf("Entities configuration initialized successfully.\n");
+	entities_config.enemy_frames_ptr = cube_settings->tex_config->enemy_frames;
+	entities_config.keycard_tex = NULL;
+	entities_config.exit_frames_ptr = cube_settings->tex_config->exit_frames;
+	entities_config.exit_location = cube_settings->map_config->exit_location;
+	ft_printf("Entities configuration initialized successfully.\n");
 	return (entities_config);
 }

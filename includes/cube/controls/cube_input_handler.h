@@ -8,6 +8,7 @@
 # define KEY_A 97
 # define KEY_S 115
 # define KEY_D 100
+# define KEY_E 101 // TODO: Verify
 
 typedef struct s_input_handler_keys
 {
@@ -18,6 +19,9 @@ typedef struct s_input_handler_keys
     int	left;
     int	right;
     int	escape;
+
+	// Action Keys
+	int	e;
 }	t_input_handler_keys;
 
 typedef struct s_input_handler

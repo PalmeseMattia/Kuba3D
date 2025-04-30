@@ -16,6 +16,7 @@ t_input_handler_keys	*input_handler_keys_init( void )
 	keys->escape = 0;
 	keys->left = 0;
 	keys->right = 0;
+	keys->e = 0;
 	return (keys);
 }
 

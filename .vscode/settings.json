@@ -30,6 +30,20 @@
 		"cube_dda.h": "c",
 		"cube_lifecycle.h": "c",
 		"mlx_int.h": "c",
-		"cube_drawing.h": "c"
+		"cube_drawing.h": "c",
+		"cube_animations.h": "c",
+		"cube_settings_animated_sprites.h": "c",
+		"__hash_table": "c",
+		"__tree": "c",
+		"any": "c",
+		"array": "c",
+		"type_traits": "c",
+		"forward_list": "c",
+		"limits": "c",
+		"ratio": "c",
+		"tuple": "c",
+		"variant": "c",
+		"fstream": "c",
+		"locale": "c"
 	}
 }

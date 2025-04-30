@@ -1,7 +1,7 @@
 NAME := Cube
 CFLAGS := -Wextra -Wall -Werror -O0 -g
 LIBLIBFT := ./lib/libft
-HEADERS := -I ./includes/ -I $(LIBLIBFT) -I ./includes/cube/mock/ -I ./includes/cube/parsing/ -I ./includes/cube/utils/ -I ./includes/cube/controls/ -I ./includes/cube/entities/ -I ./includes/cube/map/ -I ./includes/cube/mlx_handler/ -I ./includes/cube/runtime_handler/ -I ./includes/cube/runtime_handler/ -I ./includes/cube/settings/ -I ./includes/cube/dda/ -I ./includes/cube/drawing/ -I ./includes/cube/lifecycle/
+HEADERS := -I ./includes/ -I $(LIBLIBFT) -I ./includes/cube/mock/ -I ./includes/cube/parsing/ -I ./includes/cube/utils/ -I ./includes/cube/controls/ -I ./includes/cube/entities/ -I ./includes/cube/map/ -I ./includes/cube/mlx_handler/ -I ./includes/cube/runtime_handler/ -I ./includes/cube/runtime_handler/ -I ./includes/cube/settings/ -I ./includes/cube/dda/ -I ./includes/cube/drawing/ -I ./includes/cube/lifecycle/  -I ./includes/cube/animations/
 
 # OS detection
 UNAME_S := $(shell uname -s)

@@ -96,7 +96,7 @@ static void draw_textured(t_draw_vertical_slice_data *data, t_cube *cube, int y)
 	textures = cube->cube_settings->tex_config->textures;
 	if (data->tex_type == TEX_TYPE_EXIT)
 	{
-		anim = cube->entities->exit->animation_controller->idle;
+		anim = cube->entities->exit->animation_controller->current;
 		color = anim->frames_ptr->frames[anim->frame][TEXTURE_SIZE * tex_y + data->tex_x];
 		// Darken the color for horizontal walls
 		if (dda->hit_type == HORIZONTAL) 

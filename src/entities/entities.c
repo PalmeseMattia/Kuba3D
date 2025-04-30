@@ -94,6 +94,8 @@ t_enemy	*entities_enemy_init(t_point pt, t_animated_frames *frames_ptr)
 	enemy->y = pt.y + .5;
 	enemy->animation_controller = anim_animation_controller_init();
 	anim_animation_controller_set_animation(enemy->animation_controller, ANIM_TYPE_IDLE, frames_ptr); // TODO: Change to idle_tex, attack_tex, ...
+	enemy->animation_controller->playing = TRUE;
+	enemy->animation_controller->current = enemy->animation_controller->idle;
 	return (enemy);
 }
 
@@ -118,6 +120,8 @@ t_exit	*entities_exit_init(t_point pt, t_animated_frames *frames_ptr)
 	ret->unlocked = FALSE;
 	ret->animation_controller = anim_animation_controller_init();
 	anim_animation_controller_set_animation(ret->animation_controller, ANIM_TYPE_IDLE, frames_ptr);
+	ret->animation_controller->playing = FALSE;
+	ret->animation_controller->current = ret->animation_controller->idle;
 	return (ret);
 }
 

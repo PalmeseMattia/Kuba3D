@@ -22,6 +22,8 @@ typedef struct	s_animation
 	t_animated_frames	*frames_ptr;
 }	t_animation;
 
+#include <utils.h>
+
 typedef struct	s_animation_controller
 {
 	t_animation	*idle;
@@ -31,6 +33,8 @@ typedef struct	s_animation_controller
 	t_animation	*die;
 	t_animation	*open;
 	t_animation	*current;
+
+	t_bool	playing;
 }	t_animation_controller;
 
 t_animation				*anim_animation_init(t_animation_type type, t_animated_frames *frames_ptr);
@@ -39,6 +43,14 @@ t_animation_controller	*anim_animation_controller_init();
 void					anim_animation_controller_free(t_animation_controller *animation_controller);
 void					anim_animation_controller_set_animation(
 	t_animation_controller *animation_controller, 
-	t_animation_type type, t_animated_frames *frames_ptr);
+	t_animation_type type, t_animated_frames *frames_ptr
+);
+void	anim_animation_controller_player_start(
+	t_animation_controller *controller,
+	t_animation_type type
+);
+void	anim_animation_controller_player_stop(
+	t_animation_controller *controller
+);
 
 #endif

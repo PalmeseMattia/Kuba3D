@@ -35,6 +35,7 @@ t_animation_controller	*anim_animation_controller_init()
 	animation_controller->reload = NULL;
 	animation_controller->take_damage = NULL;
 	animation_controller->current = NULL; // TODO: Set to current animation playing
+	animation_controller->playing = FALSE;
 	return (animation_controller);
 }
 
@@ -80,4 +81,38 @@ void	anim_animation_controller_set_animation(
 		animation_controller->reload = anim_animation_init(type, frames_ptr);
 	else if (type == ANIM_TYPE_TAKE_DAMAGE)
 		animation_controller->take_damage = anim_animation_init(type, frames_ptr);
+}
+
+void	anim_animation_controller_player_start(
+	t_animation_controller *controller,
+	t_animation_type type
+)
+{
+	if (!controller)
+		return ;
+	if (type == ANIM_TYPE_ATTACK)
+		controller->current = controller->attack;
+	else if (type == ANIM_TYPE_DIE)
+		controller->current = controller->die;
+	else if (type == ANIM_TYPE_IDLE)
+		controller->current = controller->idle;
+	else if (type == ANIM_TYPE_OPEN)
+		controller->current = controller->open;
+	else if (type == ANIM_TYPE_RELOAD)
+		controller->current = controller->reload;
+	else if (type == ANIM_TYPE_TAKE_DAMAGE)
+		controller->current = controller->take_damage;
+	if (!controller->current)
+		return ;
+	controller->playing = TRUE;
+}
+
+void	anim_animation_controller_player_stop(
+	t_animation_controller *controller
+)
+{
+	if (!controller)
+		return ;
+	controller->playing = FALSE;
+	controller->current = controller->idle;
 }

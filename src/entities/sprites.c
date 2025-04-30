@@ -140,7 +140,7 @@ void sprites_draw(t_cube *cube)
                 
                 // Get color from sprite texture
                 unsigned int color = 0;
-				tex = sprite->animation_controller->idle->frames_ptr->frames[sprite->animation_controller->idle->frame];
+				tex = sprite->animation_controller->current->frames_ptr->frames[sprite->animation_controller->current->frame];
                 if (tex)
                     color = tex[TEXTURE_SIZE * tex_y + tex_x];
                 // Draw pixel if it's not transparent (assuming 0 is transparent)

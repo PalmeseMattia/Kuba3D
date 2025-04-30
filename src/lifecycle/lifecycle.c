@@ -41,10 +41,16 @@ static void	animate_sprites(t_cube *cube)
 		{
 			exit = cube->entities->exit;
 			enemy = cube->entities->enemies[i];
-			frame = enemy->animation_controller->idle->frame + 1;
-			enemy->animation_controller->idle->frame = frame % 3;
-			frame = exit->animation_controller->idle->frame + 1;
-			exit->animation_controller->idle->frame = frame % 3;
+			if (enemy->animation_controller->playing)
+			{
+				frame = enemy->animation_controller->idle->frame + 1;
+				enemy->animation_controller->idle->frame = frame % 3;
+			}
+			if (exit->animation_controller->playing)
+			{
+				frame = exit->animation_controller->idle->frame + 1;
+				exit->animation_controller->idle->frame = frame % 3;
+			}
 
 		}
 		last_time = current_time;

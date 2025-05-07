@@ -44,8 +44,8 @@ static int count_enemies(t_enemy **enemies)
 // Getting the distance^2, but it doesn't matter in this case
 static double	sprite_enemy_get_distance(t_enemy *enemy, t_player *player)
 {
-	return ((player->x - enemy->x) * (player->x - enemy->x) + 
-                             (player->y - enemy->y) * (player->y - enemy->y));
+	return ((player->base->current_location.x - enemy->base->current_location.x) * (player->base->current_location.x - enemy->base->current_location.x) + 
+                             (player->base->current_location.y - enemy->base->current_location.y) * (player->base->current_location.y - enemy->base->current_location.y));
 }
 
 void sprites_draw(t_cube *cube)
@@ -89,8 +89,8 @@ void sprites_draw(t_cube *cube)
         t_enemy *sprite = enemies[sprite_order[i]];
         
         // Translate sprite position relative to camera
-        double sprite_x = sprite->x - player->x;
-        double sprite_y = sprite->y - player->y;
+        double sprite_x = sprite->base->current_location.x - player->base->current_location.x;
+        double sprite_y = sprite->base->current_location.y - player->base->current_location.y;
         
         // Transform sprite with the inverse camera matrix
         double inv_det = 1.0 / (player->camera.dir_x * player->dir.dir_y - 
@@ -140,7 +140,7 @@ void sprites_draw(t_cube *cube)
                 
                 // Get color from sprite texture
                 unsigned int color = 0;
-				tex = sprite->animation_controller->current->frames_ptr->frames[sprite->animation_controller->current->frame];
+				tex = sprite->base->controller->current->frames_ptr->frames[sprite->base->controller->current->frame];
                 if (tex)
                     color = tex[TEXTURE_SIZE * tex_y + tex_x];
                 // Draw pixel if it's not transparent (assuming 0 is transparent)

@@ -33,7 +33,7 @@ t_mlx_handler	*mlx_mlx_handler_init( void )
 	if (!mlx_handler)
 		return (NULL);
 	mlx_handler->mlx = mlx_init();
-	mlx_handler->mlx_win = mlx_new_window(mlx_handler->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, "Kuba3D");
+	mlx_handler->mlx_win = mlx_new_window(mlx_handler->mlx, WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE);
 	mlx_handler->mlx_img = mlx_img_image_data_init(mlx_handler);
 	return (mlx_handler);
 }

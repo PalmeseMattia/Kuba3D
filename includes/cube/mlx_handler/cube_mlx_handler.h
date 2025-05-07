@@ -1,8 +1,9 @@
 #ifndef CUBE_MLX_HANDLER_H
 # define CUBE_MLX_HANDLER_H
 
-# define WINDOW_WIDTH 960
-# define WINDOW_HEIGHT 640
+# define WINDOW_WIDTH 1280
+# define WINDOW_HEIGHT 720
+# define WINDOW_TITLE "Kuba3D"
 
 # define FOV .66
 

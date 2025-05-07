@@ -5,27 +5,63 @@
 #include <cube_animations.h>
 #include <libft.h>
 
-t_keycard	*entities_keycard_init(t_point pt, size_t *tex)
+t_entity	*entities_entity_init(t_point pt, t_entity_type type, t_animated_frames *frames_ptr)
 {
-	t_keycard	*keycard;
+	t_entity	*entity;
+	t_location	location;
 
-	if (pt.c == 0)
+	entity = malloc(sizeof(t_entity));
+	if (!entity)
 		return (NULL);
-	keycard = malloc(sizeof(t_keycard));
-	if (!keycard)
-		return (NULL);
-	keycard->is_picked_up = FALSE;
-	keycard->tex = tex;
-	keycard->x = pt.x;
-	keycard->y = pt.y;
-	return (keycard);
+	if (type == ENTITY_TYPE_PLAYER)
+		entity->controller = NULL;
+	else
+	{
+		entity->controller = anim_animation_controller_init();
+		anim_animation_controller_set_animation(entity->controller, ANIM_TYPE_IDLE, frames_ptr);
+		entity->controller->playing = TRUE;
+		entity->controller->current = entity->controller->idle;
+	}
+	entity->hp = 100;
+	location.x = pt.x + ENTITY_CENTRAL_OFFSET;
+	location.y = pt.y + ENTITY_CENTRAL_OFFSET;
+	entity->current_location = location;
+	return (entity);
 }
 
-void	entities_keycard_free(t_keycard *keycard)
+void	entities_entity_free(t_entity *entity)
 {
-	if (!keycard)
+	if (!entity)
 		return ;
-	free(keycard);
+	anim_animation_controller_free(entity->controller);
+	safe_free(entity);
+}
+
+static t_vector	entities_player_get_orientation(t_point pt)
+{
+	t_vector	ret;
+
+	if (pt.c == 'N')
+	{
+		ret.dir_x = 0;
+		ret.dir_y = -1;
+	}
+	else if (pt.c == 'S')
+	{
+		ret.dir_x = 0;
+		ret.dir_y = 1;
+	}
+	else if (pt.c == 'E')
+	{
+		ret.dir_x = 1;
+		ret.dir_y = 0;
+	}
+	else
+	{
+		ret.dir_x = -1;
+		ret.dir_y = 0;
+	}
+	return (ret);
 }
 
 t_player *entities_player_init(t_point pt)
@@ -35,39 +71,14 @@ t_player *entities_player_init(t_point pt)
 	player = malloc(sizeof(t_player));
 	if (!player)
 		return (NULL);
-	player->hp = 100;
-	player->keycard = NULL;
-	player->x = pt.x + .5;
-	player->y = pt.y + .5;
+	player->base = entities_entity_init(pt, ENTITY_TYPE_PLAYER, NULL);
+	if (!player->base)
+	{
+		safe_free(player);
+		return (NULL);
+	}
+	player->dir = entities_player_get_orientation(pt);
 
-	// Initialize direction based on starting character
-	if (pt.c == 'N')
-	{
-		player->dir.dir_x = 0;
-		player->dir.dir_y = -1;
-	}
-	else if (pt.c == 'S')
-	{
-		player->dir.dir_x = 0;
-		player->dir.dir_y = 1;
-	}
-	else if (pt.c == 'E')
-	{
-		player->dir.dir_x = 1;
-		player->dir.dir_y = 0;
-	}
-	else if (pt.c == 'W')
-	{
-		player->dir.dir_x = -1;
-		player->dir.dir_y = 0;
-	}
-	else
-	{
-		// Default to East if not specified
-		player->dir.dir_x = 1;
-		player->dir.dir_y = 0;
-	}
-	
 	// Initialize camera plane perpendicular to direction
 	player->camera.dir_x = player->dir.dir_y * FOV;
 	player->camera.dir_y = -player->dir.dir_x * FOV;
@@ -89,13 +100,12 @@ t_enemy	*entities_enemy_init(t_point pt, t_animated_frames *frames_ptr)
 	enemy = malloc(sizeof(t_enemy));
 	if (!enemy)
 		return (NULL);
-	enemy->hp = 100;
-	enemy->x = pt.x + .5;
-	enemy->y = pt.y + .5;
-	enemy->animation_controller = anim_animation_controller_init();
-	anim_animation_controller_set_animation(enemy->animation_controller, ANIM_TYPE_IDLE, frames_ptr); // TODO: Change to idle_tex, attack_tex, ...
-	enemy->animation_controller->playing = TRUE;
-	enemy->animation_controller->current = enemy->animation_controller->idle;
+	enemy->base = entities_entity_init(pt, ENTITY_TYPE_ENEMY, frames_ptr);
+	if (!enemy->base)
+	{
+		safe_free(enemy);
+		return (NULL);
+	}
 	return (enemy);
 }
 
@@ -103,8 +113,7 @@ void entities_enemy_free(t_enemy *enemy)
 {
 	if (!enemy)
 		return;
-	if (enemy->animation_controller)
-		anim_animation_controller_free(enemy->animation_controller);
+	entities_entity_free(enemy->base);
 	safe_free(enemy);
 }
 
@@ -115,13 +124,13 @@ t_exit	*entities_exit_init(t_point pt, t_animated_frames *frames_ptr)
 	ret = malloc(sizeof(t_exit));
 	if (!ret)
 		return (NULL);
-	ret->x = pt.x + .5;
-	ret->y = pt.y + .5;
+	ret->base = entities_entity_init(pt, ENTITY_TYPE_EXIT, frames_ptr);
+	if (!ret->base)
+	{
+		safe_free(ret);
+		return (NULL);
+	}
 	ret->unlocked = FALSE;
-	ret->animation_controller = anim_animation_controller_init();
-	anim_animation_controller_set_animation(ret->animation_controller, ANIM_TYPE_IDLE, frames_ptr);
-	ret->animation_controller->playing = FALSE;
-	ret->animation_controller->current = ret->animation_controller->idle;
 	return (ret);
 }
 
@@ -129,8 +138,7 @@ void entities_exit_free(t_exit *exit_entity)
 {
 	if (!exit_entity)
 		return;
-	if (exit_entity->animation_controller)
-		anim_animation_controller_free(exit_entity->animation_controller);
+	entities_entity_free(exit_entity->base);
 	safe_free(exit_entity);
 }
 
@@ -196,21 +204,11 @@ t_entities *entities_entities_init(t_entities_config config)
 	else
 		printf("No enemies found, skipping initialization...\n");
 
-	printf("Initializing keycard...\n");
-	entities->keycard = entities_keycard_init(config.keycard_location, config.keycard_tex);
-	// if (!entities->keycard)
-	// {
-	// 	printf("Failed to initialize keycard.\n");
-	// 	entities_enemies_multiple_free(entities->enemies);
-	// 	free(entities);
-	// 	return (NULL);
-	// }
 	printf("Initializing player...\n");
 	entities->player = entities_player_init(config.player_location);
 	if (!entities->player)
 	{
 		printf("Failed to initialize player.\n");
-		entities_keycard_free(entities->keycard);
 		entities_enemies_multiple_free(entities->enemies);
 		free(entities);
 		return (NULL);
@@ -243,7 +241,6 @@ void entities_entities_free(t_entities *entities)
 		return;
 	entities_enemies_multiple_free(entities->enemies);
 	entities_player_free(entities->player);
-	entities_keycard_free(entities->keycard);
 	entities_exit_free(entities->exit);
 	safe_free(entities->sprite_order);
 	safe_free(entities->sprite_distance);
@@ -256,10 +253,8 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 
 	entities_config.enemies_locations = cube_settings->map_config->enemies_locations;
 	entities_config.enemies_count = cube_settings->map_config->enemies_count;
-	entities_config.keycard_location = cube_settings->map_config->key_location;
 	entities_config.player_location = cube_settings->map_config->start_location;
 	entities_config.enemy_frames_ptr = cube_settings->tex_config->enemy_frames;
-	entities_config.keycard_tex = NULL;
 	entities_config.exit_frames_ptr = cube_settings->tex_config->exit_frames;
 	entities_config.exit_location = cube_settings->map_config->exit_location;
 	ft_printf("Entities configuration initialized successfully.\n");

@@ -21,22 +21,22 @@ static void handle_left_right(t_cube *cube, double move_speed)
     side_dir.dir_y = player->dir.dir_x;
     if (keys->a)
     {
-        new_x = player->x + side_dir.dir_x * move_speed;
-        new_y = player->y + side_dir.dir_y * move_speed;
+        new_x = player->base->current_location.x + side_dir.dir_x * move_speed;
+        new_y = player->base->current_location.y + side_dir.dir_y * move_speed;
         if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
         {
-            player->x = new_x;
-            player->y = new_y;
+            player->base->current_location.x = new_x;
+            player->base->current_location.y = new_y;
         }
     }
     else if (keys->d)
     {
-        new_x = player->x - side_dir.dir_x * move_speed;
-        new_y = player->y - side_dir.dir_y * move_speed;
+        new_x = player->base->current_location.x - side_dir.dir_x * move_speed;
+        new_y = player->base->current_location.y - side_dir.dir_y * move_speed;
         if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
         {
-            player->x = new_x;
-            player->y = new_y;
+            player->base->current_location.x = new_x;
+            player->base->current_location.y = new_y;
         }
     }
 }
@@ -52,22 +52,22 @@ static void handle_for_back(t_cube *cube, double move_speed)
 	player = cube->entities->player;
 	if (keys->w)
 	{
-		new_x = player->x + player->dir.dir_x * move_speed;
-		new_y = player->y + player->dir.dir_y * move_speed;
+		new_x = player->base->current_location.x + player->dir.dir_x * move_speed;
+		new_y = player->base->current_location.y + player->dir.dir_y * move_speed;
 		if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
 		{
-			player->x = new_x;
-			player->y = new_y;
+			player->base->current_location.x = new_x;
+			player->base->current_location.y = new_y;
 		}
 	}
 	else if (keys->s)
 	{
-		new_x = player->x - player->dir.dir_x * move_speed;
-		new_y = player->y - player->dir.dir_y * move_speed;
+		new_x = player->base->current_location.x - player->dir.dir_x * move_speed;
+		new_y = player->base->current_location.y - player->dir.dir_y * move_speed;
 		if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
 		{
-			player->x = new_x;
-			player->y = new_y;
+			player->base->current_location.x = new_x;
+			player->base->current_location.y = new_y;
 		}
 	}
 }
@@ -133,7 +133,7 @@ void	input_handler_action(t_cube *cube)
 	if (keys->e)
 	{
 		printf("Action key active\n");
-		anim_animation_controller_player_start(exit->animation_controller, ANIM_TYPE_OPEN);
+		anim_animation_controller_player_start(exit->base->controller, ANIM_TYPE_OPEN);
 	}
 }
 

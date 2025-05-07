@@ -25,10 +25,11 @@ static double framerate_get_ticks()
 
 static void	animate_sprites(t_cube *cube)
 {
-	int		i;
-	int		frame;
-	t_enemy	*enemy;
-	t_exit	*exit;
+	int						i;
+	int						frame;
+	t_enemy					*enemy;
+	t_exit					*exit;
+	t_animation_controller	*controller;
 
 	static double	last_time = 0;
 	double			current_time;
@@ -41,16 +42,19 @@ static void	animate_sprites(t_cube *cube)
 		{
 			exit = cube->entities->exit;
 			enemy = cube->entities->enemies[i];
-			if (enemy->animation_controller->playing)
+			controller = enemy->base->controller;
+			if (controller->playing)
 			{
-				frame = enemy->animation_controller->idle->frame + 1;
-				enemy->animation_controller->idle->frame = frame % 3;
+				frame = controller->idle->frame + 1;
+				controller->idle->frame = frame % 3;
 			}
-			if (exit->animation_controller->playing)
-			{
-				frame = exit->animation_controller->idle->frame + 1;
-				exit->animation_controller->idle->frame = frame % 3;
-			}
+			controller = exit->base->controller;
+			// TODO: Fix this one
+			// if (controller->playing)
+			// {
+			// 	frame = controller->idle->frame + 1;
+			// 	controller->idle->frame = frame % 3;
+			// }
 
 		}
 		last_time = current_time;

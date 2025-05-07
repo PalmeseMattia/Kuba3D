@@ -132,8 +132,8 @@ static void minimap_draw_enemies(t_minimap_data *mmd)
     while (enemies[i] != NULL)
     {
         // Calculate enemy position on minimap
-        int enemy_map_x = (int)enemies[i]->x;
-        int enemy_map_y = (int)enemies[i]->y;
+        int enemy_map_x = (int)enemies[i]->base->current_location.x;
+        int enemy_map_y = (int)enemies[i]->base->current_location.y;
         
         // Only draw enemies that are within the visible area of the minimap
         if (abs(enemy_map_x - mmd->map_center_x) <= mmd->map_radius && 
@@ -232,8 +232,8 @@ void draw_minimap(t_cube *cube)
     minimap_draw_background(&mmd);
     
     // Calculate the visible area around the player
-    mmd.map_center_x = (int)mmd.player->x;
-    mmd.map_center_y = (int)mmd.player->y;
+    mmd.map_center_x = (int)mmd.player->base->current_location.x;
+    mmd.map_center_y = (int)mmd.player->base->current_location.y;
     mmd.map_radius = MINIMAP_SIZE / (2 * MINIMAP_CELL_SIZE);
     
     // Draw map cells

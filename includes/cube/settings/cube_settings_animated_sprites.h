@@ -14,13 +14,15 @@
 // Exit
 # define ANIM_EXIT_IDLE_FRAME_0 "./assets/textures/biohazard/xpm/exit/exit_0.xpm"
 
-# define ANIM_EXIT_OPEN_FRAME_0 "./assets/textures/biohazard/xpm/exit/exit_0.xpm"
-# define ANIM_EXIT_OPEN_FRAME_1 "./assets/textures/biohazard/xpm/exit/exit_1.xpm"
-# define ANIM_EXIT_OPEN_FRAME_2 "./assets/textures/biohazard/xpm/exit/exit_2.xpm"
-# define ANIM_EXIT_OPEN_FRAME_3 "./assets/textures/biohazard/xpm/exit/exit_3.xpm"
+# define ANIM_EXIT_OPEN_FRAME_0 "./assets/textures/biohazard/xpm/exit/open/exit_0.xpm"
+# define ANIM_EXIT_OPEN_FRAME_1 "./assets/textures/biohazard/xpm/exit/open/exit_1.xpm"
+# define ANIM_EXIT_OPEN_FRAME_2 "./assets/textures/biohazard/xpm/exit/open/exit_2.xpm"
+# define ANIM_EXIT_OPEN_FRAME_3 "./assets/textures/biohazard/xpm/exit/open/exit_3.xpm"
+# define ANIM_EXIT_OPEN_FRAME_4 "./assets/textures/biohazard/xpm/exit/open/exit_4.xpm"
+# define ANIM_EXIT_OPEN_FRAME_5 "./assets/textures/biohazard/xpm/exit/open/exit_5.xpm"
 
 # define ANIM_EXIT_IDLE_FRAMES_COUNT 1
-# define ANIM_EXIT_OPEN_FRAMES_COUNT 4
+# define ANIM_EXIT_OPEN_FRAMES_COUNT 6
 
 # include <stdlib.h>
 
@@ -34,5 +36,6 @@ typedef struct s_mlx_handler	t_mlx_handler;
 
 t_animated_frames	*settings_enemy_frames_init(t_mlx_handler *mlx_handler);
 t_animated_frames	*settings_exit_idle_frames_init(t_mlx_handler *mlx_handler);
+t_animated_frames	*settings_exit_open_frames_init(t_mlx_handler *mlx_handler);
 
 #endif

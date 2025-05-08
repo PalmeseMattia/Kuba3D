@@ -35,6 +35,7 @@ typedef struct	s_animation_controller
 	t_animation	*current;
 
 	t_bool	playing;
+	t_bool	repeat;
 }	t_animation_controller;
 
 t_animation				*anim_animation_init(t_animation_type type, t_animated_frames *frames_ptr);

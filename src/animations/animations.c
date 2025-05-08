@@ -34,8 +34,9 @@ t_animation_controller	*anim_animation_controller_init()
 	animation_controller->open = NULL;
 	animation_controller->reload = NULL;
 	animation_controller->take_damage = NULL;
-	animation_controller->current = NULL; // TODO: Set to current animation playing
+	animation_controller->current = NULL;
 	animation_controller->playing = FALSE;
+	animation_controller->repeat = FALSE;
 	return (animation_controller);
 }
 

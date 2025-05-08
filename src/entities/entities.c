@@ -19,7 +19,8 @@ t_entity	*entities_entity_init(t_point pt, t_entity_type type, t_animated_frames
 	{
 		entity->controller = anim_animation_controller_init();
 		anim_animation_controller_set_animation(entity->controller, ANIM_TYPE_IDLE, frames_ptr);
-		entity->controller->playing = TRUE;
+		entity->controller->playing = FALSE;
+		entity->controller->repeat = FALSE;
 		entity->controller->current = entity->controller->idle;
 	}
 	entity->hp = 100;
@@ -106,6 +107,8 @@ t_enemy	*entities_enemy_init(t_point pt, t_animated_frames *frames_ptr)
 		safe_free(enemy);
 		return (NULL);
 	}
+	enemy->base->controller->playing = TRUE;
+	enemy->base->controller->repeat = TRUE;
 	return (enemy);
 }
 
@@ -117,19 +120,20 @@ void entities_enemy_free(t_enemy *enemy)
 	safe_free(enemy);
 }
 
-t_exit	*entities_exit_init(t_point pt, t_animated_frames *frames_ptr)
+t_exit	*entities_exit_init(t_point pt, t_animated_frames *idle_frames_ptr, t_animated_frames *open_frames_ptr)
 {
 	t_exit	*ret;
 
 	ret = malloc(sizeof(t_exit));
 	if (!ret)
 		return (NULL);
-	ret->base = entities_entity_init(pt, ENTITY_TYPE_EXIT, frames_ptr);
+	ret->base = entities_entity_init(pt, ENTITY_TYPE_EXIT, idle_frames_ptr);
 	if (!ret->base)
 	{
 		safe_free(ret);
 		return (NULL);
 	}
+	anim_animation_controller_set_animation(ret->base->controller, ANIM_TYPE_OPEN, open_frames_ptr);
 	ret->unlocked = FALSE;
 	return (ret);
 }
@@ -193,7 +197,7 @@ t_entities *entities_entities_init(t_entities_config config)
 
 	
 	printf("Initializing exit...\n");
-	entities->exit = entities_exit_init(config.exit_location, config.exit_frames_ptr);
+	entities->exit = entities_exit_init(config.exit_location, config.exit_idle_frames_ptr, config.exit_open_frames_ptr);
 
 	printf("Initializing enemies...\n");
 	// Initialize enemies pointer to NULL by default
@@ -255,7 +259,8 @@ t_entities_config	entities_entities_config_init(t_cube_settings *cube_settings)
 	entities_config.enemies_count = cube_settings->map_config->enemies_count;
 	entities_config.player_location = cube_settings->map_config->start_location;
 	entities_config.enemy_frames_ptr = cube_settings->tex_config->enemy_frames;
-	entities_config.exit_frames_ptr = cube_settings->tex_config->exit_frames;
+	entities_config.exit_idle_frames_ptr = cube_settings->tex_config->exit_idle_frames;
+	entities_config.exit_open_frames_ptr = cube_settings->tex_config->exit_open_frames;
 	entities_config.exit_location = cube_settings->map_config->exit_location;
 	ft_printf("Entities configuration initialized successfully.\n");
 	return (entities_config);

@@ -3,6 +3,7 @@
 #include <cube_drawing.h>
 #include <cube_input_handler.h>
 #include <cube_animations.h>
+#include <cube_settings_animated_sprites.h>
 #include <cube.h>
 #include <cube_entities.h>
 #include <sys/time.h>
@@ -28,7 +29,6 @@ static void	animate_sprites(t_cube *cube)
 	int						i;
 	int						frame;
 	t_enemy					*enemy;
-	t_exit					*exit;
 	t_animation_controller	*controller;
 
 	static double	last_time = 0;
@@ -40,22 +40,35 @@ static void	animate_sprites(t_cube *cube)
 		i = -1;
 		while (cube->entities->enemies[++i])
 		{
-			exit = cube->entities->exit;
 			enemy = cube->entities->enemies[i];
 			controller = enemy->base->controller;
 			if (controller->playing)
 			{
-				frame = controller->idle->frame + 1;
-				controller->idle->frame = frame % 3;
+				frame = ++controller->current->frame;
+				if (frame >= controller->current->frames_ptr->frames_count - 1 && !controller->repeat)
+				{
+					controller->playing = FALSE;
+					controller->current = controller->idle;
+					controller->current->frame = 0;
+				}
+				controller->current->frame = frame % 
+					(controller->current->frames_ptr->frames_count);
 			}
-			controller = exit->base->controller;
-			// TODO: Fix this one
-			// if (controller->playing)
-			// {
-			// 	frame = controller->idle->frame + 1;
-			// 	controller->idle->frame = frame % 3;
-			// }
-
+			controller = cube->entities->exit->base->controller;
+			if (controller->playing) 
+			{
+				frame = ++controller->current->frame;
+				if (frame >= controller->current->frames_ptr->frames_count && !controller->repeat)
+				{
+					controller->playing = FALSE;
+					--controller->current->frame;
+				}
+				else 
+				{
+					controller->current->frame = frame % 
+						(controller->current->frames_ptr->frames_count);
+				}
+			}
 		}
 		last_time = current_time;
 	}

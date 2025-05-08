@@ -119,7 +119,9 @@ int input_handler_key_press(int key_code, t_cube *cube)
 	else if (key_code == KEY_ESC)
 		keys->escape = 1;
 	else if (key_code == KEY_E)
+	{
 		keys->e = 1;
+	}
 	return (0);
 }
 
@@ -188,4 +190,6 @@ void	mov_handler(t_cube *cube)
 	}
 	if (keys->escape)
 		cube->runtime_handler->running = FALSE;
+	if (keys->e)
+		input_handler_action(cube);
 }

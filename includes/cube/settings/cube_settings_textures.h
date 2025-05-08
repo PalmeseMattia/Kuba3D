@@ -45,7 +45,8 @@ typedef struct	s_tex_config
 {
 	size_t				**textures;
 	t_animated_frames	*enemy_frames;
-	t_animated_frames	*exit_frames;
+	t_animated_frames	*exit_idle_frames;
+	t_animated_frames	*exit_open_frames;
 }	t_tex_config;
 
 typedef struct s_mlx_handler	t_mlx_handler;

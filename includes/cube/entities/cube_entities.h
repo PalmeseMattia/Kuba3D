@@ -69,7 +69,8 @@ typedef struct	s_entities_config
 	t_point				exit_location;
 	t_point				**enemies_locations;
 	t_animated_frames	*enemy_frames_ptr;
-	t_animated_frames	*exit_frames_ptr;
+	t_animated_frames	*exit_idle_frames_ptr;
+	t_animated_frames	*exit_open_frames_ptr;
 	// TODO: Add exit entity
 	int		enemies_count;
 }	t_entities_config;

@@ -1,0 +1,55 @@
+{
+    "env": {
+		"myIncludePath":
+		[
+			"${workspaceFolder}/lib/libft",
+            "${workspaceFolder}/lib/mlx_mac",
+            "${workspaceFolder}/lib/mlx_linux",
+			"${workspaceFolder}/includes",
+            "${workspaceFolder}/includes/cube/utils",
+            "${workspaceFolder}/includes/cube/mock",
+            "${workspaceFolder}/includes/cube/controls",
+            "${workspaceFolder}/includes/cube/entities",
+            "${workspaceFolder}/includes/cube/map",
+            "${workspaceFolder}/includes/cube/mlx_handler",
+            "${workspaceFolder}/includes/cube/dda",
+            "${workspaceFolder}/includes/cube/settings",
+            "${workspaceFolder}/includes/cube/drawing",
+            "${workspaceFolder}/includes/cube/runtime_handler",
+            "${workspaceFolder}/includes/cube/lifecycle",
+            "${workspaceFolder}/includes/cube/animations",
+			"/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
+		],
+        "myDefines": [
+            "DEBUG=1"
+        ]
+    },
+    "configurations": [
+        {
+            "name": "Mac",
+            "compilerPath": "/usr/bin/clang",
+            "intelliSenseMode": "macos-clang-arm64",
+            "includePath": [
+                "${myIncludePath}",
+                "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Tk.framework/Versions/8.5/Headers"
+            ],
+            "defines": [
+                "${myDefines}"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "macFrameworkPath": [
+                "/System/Library/Frameworks",
+                "/Library/Frameworks"
+            ],
+            "browse": {
+                "path": [
+                    "${myIncludePath}",
+                    "${workspaceFolder}"
+                ]
+            }
+        }
+    ],
+    "version": 4,
+    "enableConfigurationSquiggles": true
+}

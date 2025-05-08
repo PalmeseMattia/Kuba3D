@@ -1,33 +1,8 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../includes/libft/libft.h"
-
-enum e_cardinal {
-	NORTH,
-	SOUTH,
-	EAST,
-	WEST
-};
-
-typedef struct s_texture
-{
-	char	*path;
-}	t_texture;
-
-typedef struct s_color
-{
-	unsigned char red;
-	unsigned char green;
-	unsigned char blue;
-}	t_color;
-
-typedef struct s_settings
-{
-	t_texture	textures[4];
-	t_color		floor;
-	t_color		ceiling;
-}	t_settings;
+#include <libft.h>
+#include <parsing.h>
 
 t_settings	*new_settings()
 {
@@ -86,9 +61,4 @@ void parse_settings(char *file_path)
 			printf("Found Ceiling color\n");
 		}
 	}
-}
-
-int main()
-{
-	parse_settings("test.cub");
 }

@@ -91,6 +91,7 @@ void	entities_player_free(t_player *player)
 {
 	if (!player)
 		return ;
+	safe_free(player->base);
 	free(player);
 }
 

@@ -57,7 +57,10 @@ static void	animate_sprites(t_cube *cube)
 			controller = cube->entities->exit->base->controller;
 			if (controller->playing) 
 			{
-				frame = ++controller->current->frame;
+				if (controller->current->frame != 0 && controller->reverse)
+					frame = --controller->current->frame;
+				else
+					frame = ++controller->current->frame;
 				if (frame >= controller->current->frames_ptr->frames_count && !controller->repeat)
 				{
 					controller->playing = FALSE;
@@ -68,6 +71,10 @@ static void	animate_sprites(t_cube *cube)
 					controller->current->frame = frame % 
 						(controller->current->frames_ptr->frames_count);
 				}
+				if (controller->current->frame == 0)
+					cube->entities->exit->unlocked = FALSE;
+				else if (controller->current->frame == ANIM_EXIT_OPEN_FRAMES_COUNT - 1)
+					cube->entities->exit->unlocked = TRUE;
 			}
 		}
 		last_time = current_time;

@@ -36,6 +36,7 @@ typedef struct	s_animation_controller
 
 	t_bool	playing;
 	t_bool	repeat;
+	t_bool	reverse;
 }	t_animation_controller;
 
 t_animation				*anim_animation_init(t_animation_type type, t_animated_frames *frames_ptr);
@@ -48,7 +49,8 @@ void					anim_animation_controller_set_animation(
 );
 void	anim_animation_controller_player_start(
 	t_animation_controller *controller,
-	t_animation_type type
+	t_animation_type type,
+	t_bool reverse
 );
 void	anim_animation_controller_player_stop(
 	t_animation_controller *controller

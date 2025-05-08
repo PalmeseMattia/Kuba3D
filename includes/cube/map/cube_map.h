@@ -23,6 +23,7 @@ typedef struct	s_map
 }	t_map;
 
 typedef struct	s_map	t_map;
+typedef struct	s_cube	t_cube;
 
 typedef struct s_map_config	t_map_config;
 
@@ -34,5 +35,6 @@ t_map	*map_map_init(t_map_config *config);
 void	map_map_free(t_map *map);
 t_bool	map_is_within_bounds(int x, int y, t_map map);
 t_bool	map_is_walkable(t_point pt);
+t_bool	map_is_door_open(t_cube *cube);
 
 #endif

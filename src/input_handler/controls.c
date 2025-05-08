@@ -4,8 +4,21 @@
 #include <cube_entities.h>
 #include <cube_runtime.h>
 #include <cube_animations.h>
+#include <cube_settings_animated_sprites.h>
 #include <math.h>
 #include <stdio.h>
+
+static t_bool	is_walkable(t_cube *cube, t_point pt)
+{
+	if (pt.x == (int)cube->entities->exit->base->current_location.x && \
+		pt.y == (int)cube->entities->exit->base->current_location.y && \
+		cube->entities->exit->unlocked)
+	{
+		return (TRUE);
+	}
+	return (map_is_walkable(pt));
+
+}
 
 static void handle_left_right(t_cube *cube, double move_speed)
 {
@@ -23,7 +36,7 @@ static void handle_left_right(t_cube *cube, double move_speed)
     {
         new_x = player->base->current_location.x + side_dir.dir_x * move_speed;
         new_y = player->base->current_location.y + side_dir.dir_y * move_speed;
-        if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
+        if (is_walkable(cube, cube->map->tiles[(int)new_y][(int)new_x]))
         {
             player->base->current_location.x = new_x;
             player->base->current_location.y = new_y;
@@ -33,7 +46,7 @@ static void handle_left_right(t_cube *cube, double move_speed)
     {
         new_x = player->base->current_location.x - side_dir.dir_x * move_speed;
         new_y = player->base->current_location.y - side_dir.dir_y * move_speed;
-        if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
+        if (is_walkable(cube, cube->map->tiles[(int)new_y][(int)new_x]))
         {
             player->base->current_location.x = new_x;
             player->base->current_location.y = new_y;
@@ -54,7 +67,7 @@ static void handle_for_back(t_cube *cube, double move_speed)
 	{
 		new_x = player->base->current_location.x + player->dir.dir_x * move_speed;
 		new_y = player->base->current_location.y + player->dir.dir_y * move_speed;
-		if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
+		if (is_walkable(cube, cube->map->tiles[(int)new_y][(int)new_x]))
 		{
 			player->base->current_location.x = new_x;
 			player->base->current_location.y = new_y;
@@ -64,7 +77,7 @@ static void handle_for_back(t_cube *cube, double move_speed)
 	{
 		new_x = player->base->current_location.x - player->dir.dir_x * move_speed;
 		new_y = player->base->current_location.y - player->dir.dir_y * move_speed;
-		if (map_is_walkable(cube->map->tiles[(int)new_y][(int)new_x]))
+		if (is_walkable(cube, cube->map->tiles[(int)new_y][(int)new_x]))
 		{
 			player->base->current_location.x = new_x;
 			player->base->current_location.y = new_y;
@@ -129,13 +142,24 @@ void	input_handler_action(t_cube *cube)
 {
 	t_input_handler_keys	*keys;
 	t_exit					*exit;
+	int						frame;
+	t_animation				*current;
 
 	keys = cube->input_handler->keys;
 	exit = cube->entities->exit;
+	current = exit->base->controller->current;
+	frame = current->frame;
 	if (keys->e)
 	{
 		printf("Action key active\n");
-		anim_animation_controller_player_start(exit->base->controller, ANIM_TYPE_OPEN);
+		if (current->type == ANIM_TYPE_OPEN && frame == current->frames_ptr->frames_count - 1)
+		{
+			anim_animation_controller_player_start(exit->base->controller, ANIM_TYPE_OPEN, TRUE);
+		}
+		else
+		{
+			anim_animation_controller_player_start(exit->base->controller, ANIM_TYPE_OPEN, FALSE);
+		}
 	}
 }
 
@@ -161,6 +185,7 @@ int input_handler_key_release(int key_code, t_cube *cube)
 	return (0);
 }
 
+// TODO: Override map_is_walkable when door open
 void	mov_handler(t_cube *cube)
 {
 	double					m_speed;

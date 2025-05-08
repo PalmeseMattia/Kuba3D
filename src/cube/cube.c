@@ -26,19 +26,18 @@ t_cube	*cube_cube_init(char **map, int width, int height, const char **tex_paths
 	cube->entities = entities_entities_init(entities_entities_config_init(cube->cube_settings));
 	printf("4... Initialized entities\n");
 
-	cube->input_handler = input_handler_init();
-	printf("5... Initialized input_handler\n");
-
 	cube->map = map_map_init(cube->cube_settings->map_config);
-	printf("6... Initialized map\n");
+	printf("5... Initialized map\n");
 
 	cube->runtime_handler = runtime_runtime_handler_init();
-	printf("7... Initialized runtime_handler\n");
+	printf("6... Initialized runtime_handler\n");
+
+	cube->input_handler = input_handler_init();
+	printf("7... Initialized input_handler\n");
 
 	// TODO: Init DDA data
 	printf("8... Initializing DDA data\n");
 	cube->dda_data = dda_init();
-	printf("9... Initialized DDA data\n");
 
 	return (cube);
 }

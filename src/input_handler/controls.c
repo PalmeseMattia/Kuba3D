@@ -85,31 +85,42 @@ static void handle_for_back(t_cube *cube, double move_speed)
 	}
 }
 
-static void handle_rotation(t_cube *cube, double r_speed)
+static void	handle_rotation_right(t_cube *cube, double r_speed)
 {
-    t_player	*player;
+	t_player	*player;
     t_vector	dir_vect;
     t_vector	camera_vect;
 
-    player = cube->entities->player;    
+	player = cube->entities->player;
+	dir_vect.dir_x = player->dir.dir_x * cos(-r_speed) - player->dir.dir_y * sin(-r_speed);
+	dir_vect.dir_y = player->dir.dir_x * sin(-r_speed) + player->dir.dir_y * cos(-r_speed);
+	camera_vect.dir_x = player->camera.dir_x * cos(-r_speed) - player->camera.dir_y * sin(-r_speed);
+	camera_vect.dir_y = player->camera.dir_x * sin(-r_speed) + player->camera.dir_y * cos(-r_speed);
+	player->dir = dir_vect;
+	player->camera = camera_vect;	
+}
+
+static void	handle_rotation_left(t_cube *cube, double r_speed)
+{
+	t_player	*player;
+    t_vector	dir_vect;
+    t_vector	camera_vect;
+
+	player = cube->entities->player;
+	dir_vect.dir_x = player->dir.dir_x * cos(r_speed) - player->dir.dir_y * sin(r_speed);
+	dir_vect.dir_y = player->dir.dir_x * sin(r_speed) + player->dir.dir_y * cos(r_speed);
+	camera_vect.dir_x = player->camera.dir_x * cos(r_speed) - player->camera.dir_y * sin(r_speed);
+	camera_vect.dir_y = player->camera.dir_x * sin(r_speed) + player->camera.dir_y * cos(r_speed);
+	player->dir = dir_vect;
+	player->camera = camera_vect;
+}
+
+static void handle_rotation(t_cube *cube, double r_speed)
+{
     if (cube->input_handler->keys->right)
-    {
-        dir_vect.dir_x = player->dir.dir_x * cos(-r_speed) - player->dir.dir_y * sin(-r_speed);
-        dir_vect.dir_y = player->dir.dir_x * sin(-r_speed) + player->dir.dir_y * cos(-r_speed);
-        camera_vect.dir_x = player->camera.dir_x * cos(-r_speed) - player->camera.dir_y * sin(-r_speed);
-        camera_vect.dir_y = player->camera.dir_x * sin(-r_speed) + player->camera.dir_y * cos(-r_speed);
-        player->dir = dir_vect;
-        player->camera = camera_vect;
-    }
+		handle_rotation_right(cube, r_speed);
     else if (cube->input_handler->keys->left)
-    {
-        dir_vect.dir_x = player->dir.dir_x * cos(r_speed) - player->dir.dir_y * sin(r_speed);
-        dir_vect.dir_y = player->dir.dir_x * sin(r_speed) + player->dir.dir_y * cos(r_speed);
-        camera_vect.dir_x = player->camera.dir_x * cos(r_speed) - player->camera.dir_y * sin(r_speed);
-        camera_vect.dir_y = player->camera.dir_x * sin(r_speed) + player->camera.dir_y * cos(r_speed);
-        player->dir = dir_vect;
-        player->camera = camera_vect;
-    }
+		handle_rotation_left(cube, r_speed);
 }
 
 int input_handler_key_press(int key_code, t_cube *cube)
@@ -161,6 +172,33 @@ void	input_handler_action(t_cube *cube)
 			anim_animation_controller_player_start(exit->base->controller, ANIM_TYPE_OPEN, FALSE);
 		}
 	}
+}
+
+int	input_handler_mouse_movement(int x, int y, t_cube *cube)
+{
+	t_mouse				mouse;
+	int					delta_x;
+	double				r_speed;
+	t_runtime_handler	*rh;
+
+	(void)x;
+	(void)y;
+	if (!cube || !cube->runtime_handler)
+		return (0);
+	rh = cube->runtime_handler;
+	rh->frametime = (rh->time - rh->old_time) / 1000.0;
+	r_speed = cube->runtime_handler->frametime * 3.0;
+	mouse = input_handler_mouse_get_cursor_position(cube);
+	if (mouse.x == cube->input_handler->mouse.x)
+		return (0);
+	delta_x = mouse.x - cube->input_handler->mouse.x;
+	printf("Mouse delta: %d\n", delta_x);
+	if (delta_x < 0)
+		handle_rotation_left(cube, r_speed);
+	else
+		handle_rotation_right(cube, r_speed);
+	input_handler_mouse_reset_cursor_position(cube);
+	return (0);
 }
 
 int input_handler_key_release(int key_code, t_cube *cube)

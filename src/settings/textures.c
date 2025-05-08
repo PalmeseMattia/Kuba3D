@@ -16,7 +16,8 @@ t_tex_config	*settings_tex_config_init(const char **paths, t_mlx_handler *mlx_ha
 		return (NULL);
 	tex_config->textures = malloc(sizeof(size_t *) * (TEXTURE_TYPES_COUNT));
 	tex_config->enemy_frames = settings_enemy_frames_init(mlx_handler);
-	tex_config->exit_frames = settings_exit_idle_frames_init(mlx_handler);
+	tex_config->exit_idle_frames = settings_exit_idle_frames_init(mlx_handler);
+	tex_config->exit_open_frames = settings_exit_open_frames_init(mlx_handler);
 	if (!tex_config->textures)
 	{
 		safe_free(tex_config);
@@ -175,15 +176,26 @@ void settings_tex_config_free(t_tex_config *tex_config)
     }
     
     // Free animation frames for exit
-    if (tex_config->exit_frames)
+    if (tex_config->exit_idle_frames)
     {
-        if (tex_config->exit_frames->frames)
+        if (tex_config->exit_idle_frames->frames)
         {
-            for (i = 0; i < tex_config->exit_frames->frames_count; i++)
-                safe_free(tex_config->exit_frames->frames[i]);
-            safe_free(tex_config->exit_frames->frames);
+            for (i = 0; i < tex_config->exit_idle_frames->frames_count; i++)
+                safe_free(tex_config->exit_idle_frames->frames[i]);
+            safe_free(tex_config->exit_idle_frames->frames);
         }
-        safe_free(tex_config->exit_frames);
+        safe_free(tex_config->exit_idle_frames);
+    }
+
+    if (tex_config->exit_open_frames)
+    {
+        if (tex_config->exit_open_frames->frames)
+        {
+            for (i = 0; i < tex_config->exit_open_frames->frames_count; i++)
+                safe_free(tex_config->exit_open_frames->frames[i]);
+            safe_free(tex_config->exit_open_frames->frames);
+        }
+        safe_free(tex_config->exit_open_frames);
     }
     
     safe_free(tex_config);

@@ -1,5 +1,7 @@
 #include <cube_map.h>
+#include <cube.h>
 #include <cube_settings.h>
+#include <cube_entities.h>
 #include <stdlib.h>
 
 t_bool	map_is_within_bounds(int x, int y, t_map map)
@@ -13,9 +15,14 @@ t_bool	map_is_within_bounds(int x, int y, t_map map)
 	return (TRUE);
 }
 
+t_bool	map_is_door_open(t_cube *cube)
+{
+	return (cube->entities->exit->unlocked);
+}
+
 t_bool	map_is_walkable(t_point pt)
 {
-	return (pt.c != '1' && pt.c != 'O');
+	return (pt.c != '1' && pt.c != 'O' && pt.c != 'Q');
 }
 
 t_point	*map_point_init_heap(int x, int y, char c)

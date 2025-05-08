@@ -34,8 +34,10 @@ t_animation_controller	*anim_animation_controller_init()
 	animation_controller->open = NULL;
 	animation_controller->reload = NULL;
 	animation_controller->take_damage = NULL;
-	animation_controller->current = NULL; // TODO: Set to current animation playing
+	animation_controller->current = NULL;
 	animation_controller->playing = FALSE;
+	animation_controller->repeat = FALSE;
+	animation_controller->reverse = FALSE;
 	return (animation_controller);
 }
 
@@ -85,7 +87,8 @@ void	anim_animation_controller_set_animation(
 
 void	anim_animation_controller_player_start(
 	t_animation_controller *controller,
-	t_animation_type type
+	t_animation_type type,
+	t_bool reverse
 )
 {
 	if (!controller)
@@ -105,6 +108,7 @@ void	anim_animation_controller_player_start(
 	if (!controller->current)
 		return ;
 	controller->playing = TRUE;
+	controller->reverse = reverse;
 }
 
 void	anim_animation_controller_player_stop(

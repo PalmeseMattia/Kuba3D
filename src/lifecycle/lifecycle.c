@@ -3,6 +3,7 @@
 #include <cube_drawing.h>
 #include <cube_input_handler.h>
 #include <cube_animations.h>
+#include <cube_settings_animated_sprites.h>
 #include <cube.h>
 #include <cube_entities.h>
 #include <sys/time.h>
@@ -25,10 +26,10 @@ static double framerate_get_ticks()
 
 static void	animate_sprites(t_cube *cube)
 {
-	int		i;
-	int		frame;
-	t_enemy	*enemy;
-	t_exit	*exit;
+	int						i;
+	int						frame;
+	t_enemy					*enemy;
+	t_animation_controller	*controller;
 
 	static double	last_time = 0;
 	double			current_time;
@@ -39,19 +40,42 @@ static void	animate_sprites(t_cube *cube)
 		i = -1;
 		while (cube->entities->enemies[++i])
 		{
-			exit = cube->entities->exit;
 			enemy = cube->entities->enemies[i];
-			if (enemy->animation_controller->playing)
+			controller = enemy->base->controller;
+			if (controller->playing)
 			{
-				frame = enemy->animation_controller->idle->frame + 1;
-				enemy->animation_controller->idle->frame = frame % 3;
+				frame = ++controller->current->frame;
+				if (frame >= controller->current->frames_ptr->frames_count - 1 && !controller->repeat)
+				{
+					controller->playing = FALSE;
+					controller->current = controller->idle;
+					controller->current->frame = 0;
+				}
+				controller->current->frame = frame % 
+					(controller->current->frames_ptr->frames_count);
 			}
-			if (exit->animation_controller->playing)
+			controller = cube->entities->exit->base->controller;
+			if (controller->playing) 
 			{
-				frame = exit->animation_controller->idle->frame + 1;
-				exit->animation_controller->idle->frame = frame % 3;
+				if (controller->current->frame != 0 && controller->reverse)
+					frame = --controller->current->frame;
+				else
+					frame = ++controller->current->frame;
+				if (frame >= controller->current->frames_ptr->frames_count && !controller->repeat)
+				{
+					controller->playing = FALSE;
+					--controller->current->frame;
+				}
+				else 
+				{
+					controller->current->frame = frame % 
+						(controller->current->frames_ptr->frames_count);
+				}
+				if (controller->current->frame == 0)
+					cube->entities->exit->unlocked = FALSE;
+				else if (controller->current->frame == ANIM_EXIT_OPEN_FRAMES_COUNT - 1)
+					cube->entities->exit->unlocked = TRUE;
 			}
-
 		}
 		last_time = current_time;
 	}

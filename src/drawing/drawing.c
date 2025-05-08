@@ -28,9 +28,9 @@ static double	draw_get_wall_x(t_cube *cube)
 	dda = cube->dda_data;
 	player = cube->entities->player;
 	if (dda->hit_type == HORIZONTAL)
-		wall_x = player->y + dda->perp_wall_dist * dda->ray_dir.dir_y;
+		wall_x = player->base->current_location.y + dda->perp_wall_dist * dda->ray_dir.dir_y;
 	else
-		wall_x = player->x + dda->perp_wall_dist * dda->ray_dir.dir_x;
+		wall_x = player->base->current_location.x + dda->perp_wall_dist * dda->ray_dir.dir_x;
 	wall_x -= floor(wall_x);
 	return (wall_x);
 }
@@ -96,7 +96,7 @@ static void draw_textured(t_draw_vertical_slice_data *data, t_cube *cube, int y)
 	textures = cube->cube_settings->tex_config->textures;
 	if (data->tex_type == TEX_TYPE_EXIT)
 	{
-		anim = cube->entities->exit->animation_controller->current;
+		anim = cube->entities->exit->base->controller->current;
 		color = anim->frames_ptr->frames[anim->frame][TEXTURE_SIZE * tex_y + data->tex_x];
 		// Darken the color for horizontal walls
 		if (dda->hit_type == HORIZONTAL) 
@@ -244,8 +244,8 @@ static void temp_prep_dda(t_cube *cube)
 	player = cube->entities->player;
 	dda = cube->dda_data;
 	
-	dda->pos_x = player->x;
-	dda->pos_y = player->y;
+	dda->pos_x = player->base->current_location.x;
+	dda->pos_y = player->base->current_location.y;
 	dda->dir_vect = player->dir;  // Copy the entire vector
 	dda->camera_dir = player->camera;  // Copy the entire vector
 }

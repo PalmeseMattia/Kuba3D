@@ -22,8 +22,8 @@ void dda_setup(t_cube *cube, double camera_x)
     dda->ray_dir.dir_x = dda->dir_vect.dir_x + dda->camera_dir.dir_x * camera_x;
     dda->ray_dir.dir_y = dda->dir_vect.dir_y + dda->camera_dir.dir_y * camera_x;
     
-    dda->pos_x = player->x;
-    dda->pos_y = player->y;
+    dda->pos_x = player->base->current_location.x;
+    dda->pos_y = player->base->current_location.y;
     dda->map_x = (int)dda->pos_x;
     dda->map_y = (int)dda->pos_y;
     

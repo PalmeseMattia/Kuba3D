@@ -5,6 +5,9 @@
 # define WINDOW_HEIGHT 720
 # define WINDOW_TITLE "Kuba3D"
 
+# define WINDOW_CENTER_X (WINDOW_WIDTH / 2)
+# define WINDOW_CENTER_Y (WINDOW_HEIGHT /  2)
+
 # define FOV .66
 
 typedef struct	s_image_data

@@ -1,4 +1,5 @@
 #include <cube_input_handler.h>
+#include <cube_mlx_handler.h>
 #include <utils.h>
 #include <stdlib.h>
 
@@ -23,6 +24,7 @@ t_input_handler_keys	*input_handler_keys_init( void )
 t_input_handler	*input_handler_init( void )
 {
 	t_input_handler	*input_handler;
+	t_mouse			mouse;
 
 	input_handler = malloc(sizeof(t_input_handler));
 	if (!input_handler)
@@ -33,6 +35,11 @@ t_input_handler	*input_handler_init( void )
 		safe_free(input_handler);
 		return (NULL);
 	}
+	mouse.show = FALSE;
+	mouse.enable = FALSE;
+	mouse.x = WINDOW_CENTER_X;
+	mouse.y = WINDOW_CENTER_Y;
+	input_handler->mouse = mouse;
 	return (input_handler);
 }
 

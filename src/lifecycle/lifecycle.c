@@ -9,6 +9,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <mlx.h>
 
 int		on_destroy(t_cube *cube)
 {
